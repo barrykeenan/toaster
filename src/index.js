@@ -20,10 +20,15 @@ function init() {
     initLights();
 
     // create a cube
-    var cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
-    var cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+    var cubeGeometry = new THREE.BoxGeometry(9, 9, 9);
+    var cubeMaterial = new THREE.MeshStandardMaterial({
+        envMap: scene.background,
+        color: 0xffffff,
+        metalness: 0.5,
+        roughness: 0.5,
+    });
     var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    cube.castShadow = true;
+    // cube.castShadow = true;
     scene.add(cube);
 
     // add the output of the renderer to the html element
