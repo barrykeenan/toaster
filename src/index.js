@@ -19,13 +19,26 @@ function init() {
 
     initLights();
 
+    var urls = [
+        './assets/textures/cubemap/right.png',
+        './assets/textures/cubemap/left.png',
+        './assets/textures/cubemap/top.png',
+        './assets/textures/cubemap/bottom.png',
+        './assets/textures/cubemap/front.png',
+        './assets/textures/cubemap/back.png'
+    ];
+  
+    var cubeLoader = new THREE.CubeTextureLoader();
+    var environmentMap = cubeLoader.load(urls);
+    // scene.background = environmentMap;
+
     // create a cube
     var cubeGeometry = new THREE.BoxGeometry(9, 9, 9);
     var cubeMaterial = new THREE.MeshStandardMaterial({
-        envMap: scene.background,
+        envMap: environmentMap,
         color: 0xffffff,
-        metalness: 0.5,
-        roughness: 0.5,
+        metalness: 0.9,
+        roughness: 0.1,
     });
     var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     // cube.castShadow = true;
