@@ -47,7 +47,7 @@ export function initRenderer(additionalProperties) {
  * @param {Vector3} [initialPosition]
  */
 export function initCamera(initialPosition) {
-    var position = initialPosition !== undefined ? initialPosition : new Vector3(-30, 40, 30);
+    var position = initialPosition !== undefined ? initialPosition : new Vector3(-20, 22, 40);
 
     var camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.copy(position);
