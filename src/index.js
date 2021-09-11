@@ -5,10 +5,15 @@ import {
     Vector3,
     Group,
     Mesh,
+    TubeGeometry,
+    MeshBasicMaterial,
     MeshStandardMaterial,
     CubeTextureLoader,
     AmbientLight,
     DirectionalLight,
+    Raycaster,
+    CatmullRomCurve3,
+    
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
@@ -19,6 +24,8 @@ import * as util from './util';
 function init() {
     // listen to the resize events
     window.addEventListener('resize', onResize, false);
+    document.addEventListener('mousemove', onDocumentMouseMove, false);
+    document.addEventListener('mousedown', onDocumentMouseDown, false);
 
     var stats = util.initStats();
     var renderer = util.initRenderer();
@@ -52,9 +59,12 @@ function init() {
         roughness: 0.1,
     });
 
-    var group = new Group();
-    group.name = "toaster";
-    scene.add(group);
+    const pickableMeshes = [];
+
+    const toaster = new Group();
+    toaster.name = "toaster";
+    scene.add(toaster);
+    console.log('Added toaster group: ', toaster);
 
     var loader = new OBJLoader();
     loader.load('../../assets/models/smeg-toaster/smeg-toaster-body.obj', function (mesh) {
@@ -62,16 +72,18 @@ function init() {
         mesh.children.forEach(function (child) {
             child.material = material;
             // child.geometry.castShadow = true;
+            pickableMeshes.push(child);
         });
-        group.add(mesh);
+        toaster.add(mesh);
     });
 
     loader.load('../../assets/models/smeg-toaster/smeg-toaster-lever.obj', function (mesh) {
         mesh.name = "toaster-lever";
         mesh.children.forEach(function (child) {
             child.material = material;
+            pickableMeshes.push(child);
         });
-        group.add(mesh);
+        toaster.add(mesh);
     });
 
     // add the output of the renderer to the html element
@@ -86,6 +98,8 @@ function init() {
         this.outputObjects = function () {
             console.log(scene.children);
         }
+
+        this.showRay = false;
     };
 
     var gui = new dat.GUI();
@@ -97,6 +111,9 @@ function init() {
     gui.add(controls, 'bouncingSpeed', 0, 0.5);
     gui.add(controls, 'heightScale', 0, 3, 0.1);
     gui.add(controls, 'outputObjects');
+    gui.add(controls, 'showRay').onChange(function (e) {
+        if (tube) scene.remove(tube)
+    });
 
     render();
 
@@ -126,6 +143,55 @@ function init() {
         // render using requestAnimationFrame
         requestAnimationFrame(render);
         renderer.render(scene, camera);
+    }
+
+ var tube;
+
+    function onDocumentMouseDown(event) {
+        var vector = new Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+        vector = vector.unproject(camera);
+
+        var raycaster = new Raycaster(camera.position, vector.sub(camera.position).normalize());
+        var intersects = raycaster.intersectObjects(pickableMeshes);
+
+        if (intersects.length > 0) {
+            console.log(intersects[0]);
+            console.log('Picked:', intersects[0].object);
+            // intersects[0].object.material.transparent = true;
+            // intersects[0].object.material.opacity = 0.1;
+        }
+    }
+
+    function onDocumentMouseMove(event) {
+        if (controls.showRay) {
+            var vector = new Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+            vector = vector.unproject(camera);
+
+            var raycaster = new Raycaster(camera.position, vector.sub(camera.position).normalize());
+            var intersects = raycaster.intersectObjects(pickableMeshes);
+
+            if (intersects.length > 0) {
+                console.log(intersects[0]);
+                console.log('Picking:', intersects[0].object);
+
+                var points = [];
+                // points.push(camera.position);
+                points.push(new Vector3(-20, 21.8, 40));
+                points.push(intersects[0].point);
+
+                var mat = new MeshBasicMaterial({color: 0xff0000, transparent: true, opacity: 0.6});
+                var tubeGeometry = new TubeGeometry(new CatmullRomCurve3(points), 60, 0.001);
+
+                if (tube) {
+                    scene.remove(tube);
+                }
+                
+                if (controls.showRay) {
+                    tube = new Mesh(tubeGeometry, mat);
+                    scene.add(tube);
+                }
+            }
+        }
     }
 
     function onResize() {
