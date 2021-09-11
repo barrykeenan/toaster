@@ -2,6 +2,7 @@
 import {
     Scene,
     Clock,
+    Vector2,
     Vector3,
     Group,
     Mesh,
@@ -32,6 +33,8 @@ function init() {
     var camera = util.initCamera();
     var scene = new Scene();
     var clock = new Clock();
+    const raycaster = new Raycaster();
+    const mouse = new Vector2();
 
     // initialize controls
     var orbitControls = new OrbitControls(camera, renderer.domElement);
@@ -133,19 +136,22 @@ function init() {
         stats.update();
         orbitControls.update(clock.getDelta());
 
+	    // update the picking ray with the camera and mouse position
+	    raycaster.setFromCamera( mouse, camera );
+
         // bounce the toaster up and down
         step += controls.bouncingSpeed;
-        const toaster = scene.getObjectByName( "toaster" );
+        // const toaster = scene.getObjectByName( "toaster" );
         if(toaster){
             toaster.position.y = controls.heightScale * Math.sin(step);
         }
 
         // render using requestAnimationFrame
-        requestAnimationFrame(render);
+        window.requestAnimationFrame(render);
         renderer.render(scene, camera);
     }
 
- var tube;
+    var tube;
 
     function onDocumentMouseDown(event) {
         var vector = new Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
@@ -162,13 +168,13 @@ function init() {
         }
     }
 
-    function onDocumentMouseMove(event) {
-        if (controls.showRay) {
-            var vector = new Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
-            vector = vector.unproject(camera);
+    function onDocumentMouseMove( event ) {
+        // update mouse position in normalized device coordinates (-1 to +1)
+        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-            var raycaster = new Raycaster(camera.position, vector.sub(camera.position).normalize());
-            var intersects = raycaster.intersectObjects(pickableMeshes);
+        // detect objects intersecting the picking ray
+	    const intersects = raycaster.intersectObjects( pickableMeshes );
 
             if (intersects.length > 0) {
                 console.log(intersects[0]);
