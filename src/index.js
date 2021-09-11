@@ -2,13 +2,13 @@
 import {
     Scene,
     Clock,
-    MeshLambertMaterial,
+    Vector3,
+    Group,
+    Mesh,
+    MeshStandardMaterial,
+    CubeTextureLoader,
     AmbientLight,
     DirectionalLight,
-    BoxGeometry,
-    MeshStandardMaterial,
-    Mesh,
-    CubeTextureLoader,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
@@ -52,6 +52,10 @@ function init() {
         roughness: 0.1,
     });
 
+    var group = new Group();
+    group.name = "toaster";
+    scene.add(group);
+
     var loader = new OBJLoader();
     loader.load('../../assets/models/smeg-toaster/smeg-toaster-body.obj', function (mesh) {
         mesh.name = "toaster-body";
@@ -59,7 +63,15 @@ function init() {
             child.material = material;
             // child.geometry.castShadow = true;
         });
-        scene.add(mesh);
+        group.add(mesh);
+    });
+
+    loader.load('../../assets/models/smeg-toaster/smeg-toaster-lever.obj', function (mesh) {
+        mesh.name = "toaster-lever";
+        mesh.children.forEach(function (child) {
+            child.material = material;
+        });
+        group.add(mesh);
     });
 
     // add the output of the renderer to the html element
@@ -106,7 +118,7 @@ function init() {
 
         // bounce the toaster up and down
         step += controls.bouncingSpeed;
-        const toaster = scene.getObjectByName( "toaster-body" );
+        const toaster = scene.getObjectByName( "toaster" );
         if(toaster){
             toaster.position.y = controls.heightScale * Math.sin(step);
         }
