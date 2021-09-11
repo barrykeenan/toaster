@@ -54,6 +54,7 @@ function init() {
 
     var loader = new OBJLoader();
     loader.load('../../assets/models/smeg-toaster/smeg-toaster-body.obj', function (mesh) {
+        mesh.name = "toaster-body";
         mesh.children.forEach(function (child) {
             child.material = material;
             // child.geometry.castShadow = true;
@@ -64,12 +65,26 @@ function init() {
     // add the output of the renderer to the html element
     document.getElementById('webgl-output').appendChild(renderer.domElement);
 
+    var step = 0;
+
+    var controls = new function () {
+        this.heightScale = 0.2;
+        this.bouncingSpeed = 0.04;
+
+        this.outputObjects = function () {
+            console.log(scene.children);
+        }
+    };
+
     var gui = new dat.GUI();
-    gui.add( camera.position , 'x', -50, 50 );
-    gui.add( camera.position , 'y', -50, 50 );
-    gui.add( camera.position , 'z', -100, 0 );
-    gui.add(material, 'metalness', 0, 1, 0.01);
-    gui.add(material, 'roughness', 0, 1, 0.01);
+    // gui.add( camera.position , 'x', -50, 50 );
+    // gui.add( camera.position , 'y', -50, 50 );
+    // gui.add( camera.position , 'z', -100, 0 );
+    // gui.add(material, 'metalness', 0, 1, 0.01);
+    // gui.add(material, 'roughness', 0, 1, 0.01);
+    gui.add(controls, 'bouncingSpeed', 0, 0.5);
+    gui.add(controls, 'heightScale', 0, 3, 0.1);
+    gui.add(controls, 'outputObjects');
 
     render();
 
@@ -88,6 +103,13 @@ function init() {
         // update the stats and the controls
         stats.update();
         orbitControls.update(clock.getDelta());
+
+        // bounce the toaster up and down
+        step += controls.bouncingSpeed;
+        const toaster = scene.getObjectByName( "toaster-body" );
+        if(toaster){
+            toaster.position.y = controls.heightScale * Math.sin(step);
+        }
 
         // render using requestAnimationFrame
         requestAnimationFrame(render);
