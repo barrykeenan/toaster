@@ -48,43 +48,28 @@ function init() {
     var material = new MeshStandardMaterial({
         envMap: environmentMap,
         color: 0xffffff,
-        metalness: 0.9,
+        metalness: 0.6,
         roughness: 0.1,
-        // metalness: 0,
-        // roughness: 1,
-        // metalness: 1,
-        // roughness: 0,
     });
 
     var loader = new OBJLoader();
-    loader.load('../../assets/models/pinecone/pinecone.obj', function (mesh) {
-        // loadedMesh is a group of meshes. For
-        // each mesh set the material, and compute the information
-        // three.js needs for rendering.
+    loader.load('../../assets/models/smeg-toaster/smeg-toaster-body.obj', function (mesh) {
         mesh.children.forEach(function (child) {
             child.material = material;
-            child.geometry.computeVertexNormals();
-            child.geometry.computeFaceNormals();
+            // child.geometry.castShadow = true;
         });
-
-        mesh.scale.set(100, 100, 100);
-
-        // call the default render loop.
-        //   loaderScene.render(mesh, camera);
         scene.add(mesh);
     });
 
     // add the output of the renderer to the html element
     document.getElementById('webgl-output').appendChild(renderer.domElement);
 
-    // var controls = new (function () {
-    //     this.rotationSpeed = 0.02;
-    //     this.bouncingSpeed = 0.03;
-    // })();
-
-    // var gui = new dat.GUI();
-    // gui.add(controls, 'rotationSpeed', 0, 0.5);
-    // gui.add(controls, 'bouncingSpeed', 0, 0.5);
+    var gui = new dat.GUI();
+    gui.add( camera.position , 'x', -50, 50 );
+    gui.add( camera.position , 'y', -50, 50 );
+    gui.add( camera.position , 'z', -100, 0 );
+    gui.add(material, 'metalness', 0, 1, 0.01);
+    gui.add(material, 'roughness', 0, 1, 0.01);
 
     render();
 
