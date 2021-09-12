@@ -75,6 +75,17 @@ function init() {
     console.log('Added toaster group: ', toaster);
 
     var loader = new OBJLoader();
+
+    // loader.load('../../assets/models/smeg-toaster/cube1m.obj', function (mesh) {
+    //     mesh.name = "cube-1m";
+    //     mesh.children.forEach(function (child) {
+    //         child.material = material;
+    //         pickableMeshes.push(child);
+    //     });
+    //     mesh.scale.set(0.1,0.1,0.1)
+    //     toaster.add(mesh);
+    // });
+
     loader.load('../../assets/models/smeg-toaster/smeg-toaster-body.obj', function (mesh) {
         mesh.name = "toaster-body";
         mesh.children.forEach(function (child) {
@@ -129,7 +140,7 @@ function init() {
         });
         debugFolder.add(mouse, 'x').step(0.01).name("mouse x").listen();
         debugFolder.add(mouse, 'y').step(0.01).name("mouse y").listen();
-        debugFolder.open();
+        // debugFolder.open();
     }
 
     function initLights() {
