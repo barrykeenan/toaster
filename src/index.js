@@ -62,6 +62,8 @@ function init() {
         roughness: 0.1,
     });
 
+    var redLaserMat = new MeshBasicMaterial({color: 0xff0000, transparent: true, opacity: 0.6});
+    
     const pickableMeshes = [];
 
     const toaster = new Group();
@@ -139,6 +141,30 @@ function init() {
 	    // update the picking ray with the camera and mouse position
 	    raycaster.setFromCamera( mouse, camera );
 
+        // detect objects intersecting the picking ray
+	    const intersects = raycaster.intersectObjects( pickableMeshes );
+    
+        if (intersects.length > 0) {
+            // offset source of line to just below camera
+            var cameraPosition = camera.position.clone();
+            cameraPosition.y = cameraPosition.y - 0.2; 
+
+            var points = [];
+            points.push(cameraPosition);
+            points.push(intersects[0].point);
+
+            var tubeGeometry = new TubeGeometry(new CatmullRomCurve3(points), 60, 0.001);
+
+            if (tube) {
+                scene.remove(tube);
+            }
+            
+            if (controls.showRay) {
+                tube = new Mesh(tubeGeometry, redLaserMat);
+                scene.add(tube);
+            }
+        }
+
         // bounce the toaster up and down
         step += controls.bouncingSpeed;
         // const toaster = scene.getObjectByName( "toaster" );
@@ -161,7 +187,7 @@ function init() {
         var intersects = raycaster.intersectObjects(pickableMeshes);
 
         if (intersects.length > 0) {
-            console.log(intersects[0]);
+            // console.log(intersects[0]);
             console.log('Picked:', intersects[0].object);
             // intersects[0].object.material.transparent = true;
             // intersects[0].object.material.opacity = 0.1;
@@ -172,32 +198,6 @@ function init() {
         // update mouse position in normalized device coordinates (-1 to +1)
         mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
         mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-        // detect objects intersecting the picking ray
-	    const intersects = raycaster.intersectObjects( pickableMeshes );
-
-            if (intersects.length > 0) {
-                console.log(intersects[0]);
-                console.log('Picking:', intersects[0].object);
-
-                var points = [];
-                // points.push(camera.position);
-                points.push(new Vector3(-20, 21.8, 40));
-                points.push(intersects[0].point);
-
-                var mat = new MeshBasicMaterial({color: 0xff0000, transparent: true, opacity: 0.6});
-                var tubeGeometry = new TubeGeometry(new CatmullRomCurve3(points), 60, 0.001);
-
-                if (tube) {
-                    scene.remove(tube);
-                }
-                
-                if (controls.showRay) {
-                    tube = new Mesh(tubeGeometry, mat);
-                    scene.add(tube);
-                }
-            }
-        }
     }
 
     function onResize() {
