@@ -5,7 +5,7 @@ module.exports = {
   devtool: 'source-map',
   entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, 'public'),
+    path: path.resolve(__dirname, 'docs'),
     filename: 'bundle.js',
   },
   performance: {
@@ -13,7 +13,7 @@ module.exports = {
     maxAssetSize: 1024000
   },
   devServer: {
-    static: './dist',
+    static: './docs',
     hot: true,
     compress: true,
     client: {
