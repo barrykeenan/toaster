@@ -40,6 +40,9 @@ function init() {
     var orbitControls = new OrbitControls(camera, renderer.domElement);
     orbitControls.autoRotate = true;
 
+    var step = 0;
+    var controls;
+
     initLights();
 
     var urls = [
@@ -94,33 +97,40 @@ function init() {
     // add the output of the renderer to the html element
     document.getElementById('webgl-output').appendChild(renderer.domElement);
 
-    var step = 0;
-
-    var controls = new function () {
-        this.heightScale = 0.2;
-        this.bouncingSpeed = 0.04;
-
-        this.outputObjects = function () {
-            console.log(scene.children);
-        }
-
-        this.showRay = false;
-    };
-
-    var gui = new dat.GUI();
-    // gui.add( camera.position , 'x', -50, 50 );
-    // gui.add( camera.position , 'y', -50, 50 );
-    // gui.add( camera.position , 'z', -100, 0 );
-    // gui.add(material, 'metalness', 0, 1, 0.01);
-    // gui.add(material, 'roughness', 0, 1, 0.01);
-    gui.add(controls, 'bouncingSpeed', 0, 0.5);
-    gui.add(controls, 'heightScale', 0, 3, 0.1);
-    gui.add(controls, 'outputObjects');
-    gui.add(controls, 'showRay').onChange(function (e) {
-        if (tube) scene.remove(tube)
-    });
+    initGUI();
 
     render();
+
+    function initGUI() {
+        controls = new function () {
+            this.heightScale = 0.2;
+            this.bouncingSpeed = 0.04;
+    
+            this.outputObjects = function () {
+                console.log(scene.children);
+            }
+    
+            this.showRay = false;
+        };
+    
+        const gui = new dat.GUI();
+        // gui.add( camera.position , 'x', -50, 50 );
+        // gui.add( camera.position , 'y', -50, 50 );
+        // gui.add( camera.position , 'z', -100, 0 );
+        // gui.add(material, 'metalness', 0, 1, 0.01);
+        // gui.add(material, 'roughness', 0, 1, 0.01);
+        gui.add(controls, 'bouncingSpeed', 0, 0.5);
+        gui.add(controls, 'heightScale', 0, 3, 0.1);
+        
+        const debugFolder = gui.addFolder('Debug');
+        debugFolder.add(controls, 'outputObjects');
+        debugFolder.add(controls, 'showRay').onChange(function (e) {
+            if (tube) scene.remove(tube)
+        });
+        debugFolder.add(mouse, 'x').step(0.01).name("mouse x").listen();
+        debugFolder.add(mouse, 'y').step(0.01).name("mouse y").listen();
+        debugFolder.open();
+    }
 
     function initLights() {
         // Ambient
