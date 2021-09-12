@@ -68,49 +68,64 @@ function init() {
     var redLaserMat = new MeshBasicMaterial({color: 0xff0000, transparent: true, opacity: 0.6});
     
     const pickableMeshes = [];
-
     const toaster = new Group();
-    toaster.name = "toaster";
-    scene.add(toaster);
-    console.log('Added toaster group: ', toaster);
 
-    var loader = new OBJLoader();
-
-    // loader.load('../../assets/models/smeg-toaster/cube1m.obj', function (mesh) {
-    //     mesh.name = "cube-1m";
-    //     mesh.children.forEach(function (child) {
-    //         child.material = material;
-    //         pickableMeshes.push(child);
-    //     });
-    //     mesh.scale.set(0.1,0.1,0.1)
-    //     toaster.add(mesh);
-    // });
-
-    loader.load('../../assets/models/smeg-toaster/smeg-toaster-body.obj', function (mesh) {
-        mesh.name = "toaster-body";
-        mesh.children.forEach(function (child) {
-            child.material = material;
-            // child.geometry.castShadow = true;
-            pickableMeshes.push(child);
-        });
-        toaster.add(mesh);
-    });
-
-    loader.load('../../assets/models/smeg-toaster/smeg-toaster-lever.obj', function (mesh) {
-        mesh.name = "toaster-lever";
-        mesh.children.forEach(function (child) {
-            child.material = material;
-            pickableMeshes.push(child);
-        });
-        toaster.add(mesh);
-    });
-
-    // add the output of the renderer to the html element
-    document.getElementById('webgl-output').appendChild(renderer.domElement);
+    initScene();
 
     initGUI();
 
+    // add the output of the renderer to the html element
+    document.getElementById('webgl-output').appendChild(renderer.domElement);
     render();
+
+
+    function initScene() {
+        toaster.name = "toaster";
+        scene.add(toaster);
+        console.log('Added toaster group: ', toaster);
+    
+        var loader = new OBJLoader();
+    
+        // loader.load('../../assets/models/smeg-toaster/cube1m.obj', function (mesh) {
+        //     mesh.name = "cube-1m";
+        //     mesh.children.forEach(function (child) {
+        //         child.material = material;
+        //         pickableMeshes.push(child);
+        //     });
+        //     mesh.scale.set(0.1,0.1,0.1)
+        //     toaster.add(mesh);
+        // });
+    
+        loader.load('../../assets/models/smeg-toaster/smeg-toaster-body.obj', function (mesh) {
+            mesh.name = "toaster-body";
+            mesh.children.forEach(function (child) {
+                child.material = material;
+                // child.geometry.castShadow = true;
+                pickableMeshes.push(child);
+            });
+            toaster.add(mesh);
+        });
+    
+        loader.load('../../assets/models/smeg-toaster/smeg-toaster-lever.obj', function (mesh) {
+            mesh.name = "toaster-lever";
+            mesh.children.forEach(function (child) {
+                child.material = material;
+                pickableMeshes.push(child);
+            });
+            toaster.add(mesh);
+        });
+    }
+
+    function initLights() {
+        // Ambient
+        var ambienLight = new AmbientLight(0x353535);
+        scene.add(ambienLight);
+
+        var dirLight = new DirectionalLight(0xffffff);
+        // dirLight.castShadow = true;
+        dirLight.position.set(50, 10, 0);
+        scene.add(dirLight);
+    }
 
     function initGUI() {
         controls = new function () {
@@ -141,17 +156,6 @@ function init() {
         debugFolder.add(mouse, 'x').step(0.01).name("mouse x").listen();
         debugFolder.add(mouse, 'y').step(0.01).name("mouse y").listen();
         // debugFolder.open();
-    }
-
-    function initLights() {
-        // Ambient
-        var ambienLight = new AmbientLight(0x353535);
-        scene.add(ambienLight);
-
-        var dirLight = new DirectionalLight(0xffffff);
-        // dirLight.castShadow = true;
-        dirLight.position.set(50, 10, 0);
-        scene.add(dirLight);
     }
 
     function render() {
