@@ -32,6 +32,7 @@ export function initRenderer(additionalProperties) {
     renderer.shadowMap.enabled = true;
     renderer.shadowMapSoft = true;
     renderer.shadowMap.type = PCFSoftShadowMap;
+    renderer.physicallyCorrectLights = true;
 
     renderer.setClearColor(new Color(0x000000));
     renderer.setSize(window.innerWidth, window.innerHeight);
