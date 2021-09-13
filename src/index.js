@@ -1,4 +1,3 @@
-// import * as THREE from 'three';
 import {
     Scene,
     Clock,
@@ -9,7 +8,12 @@ import {
     TubeGeometry,
     MeshBasicMaterial,
     MeshStandardMaterial,
+    sRGBEncoding,
+    TextureLoader,
+    EquirectangularReflectionMapping,
+    WebGLCubeRenderTarget,
     CubeTextureLoader,
+    PMREMGenerator,
     AmbientLight,
     DirectionalLight,
     Raycaster,
@@ -30,7 +34,7 @@ function init() {
 
     var stats = util.initStats();
     var renderer = util.initRenderer();
-    var camera = util.initCamera(new Vector3(-20, 22, 40));
+    var camera = util.initCamera(new Vector3(-20, 22, 48));
     var scene = new Scene();
     var clock = new Clock();
     const raycaster = new Raycaster();
@@ -45,24 +49,23 @@ function init() {
 
     initLights();
 
-    var urls = [
-        '../../assets/textures/cubemap/flowers/right.png',
-        '../../assets/textures/cubemap/flowers/left.png',
-        '../../assets/textures/cubemap/flowers/top.png',
-        '../../assets/textures/cubemap/flowers/bottom.png',
-        '../../assets/textures/cubemap/flowers/front.png',
-        '../../assets/textures/cubemap/flowers/back.png',
-    ];
+    const textureLoader = new TextureLoader();
+    const pmremGenerator = new PMREMGenerator(renderer);
 
-    var cubeLoader = new CubeTextureLoader();
-    var environmentMap = cubeLoader.load(urls);
+    const environmentMap = textureLoader.load('assets/textures/photosphere/CT-office.jpg', tx => {
+        scene.environment = pmremGenerator.fromEquirectangular(tx).texture;
+    });
+    environmentMap.mapping = EquirectangularReflectionMapping;
+    // sRGBEncoding
+
+    scene.environment = environmentMap;
     // scene.background = environmentMap;
 
+
     var material = new MeshStandardMaterial({
-        envMap: environmentMap,
         color: 0xffffff,
-        metalness: 0.6,
-        roughness: 0.1,
+        metalness: 0.9,
+        roughness: 0,
     });
 
     var redLaserMat = new MeshBasicMaterial({color: 0xff0000, transparent: true, opacity: 0.6});
@@ -82,21 +85,21 @@ function init() {
     function initScene() {
         toaster.name = "toaster";
         scene.add(toaster);
-        console.log('Added toaster group: ', toaster);
+        // console.log('Added toaster group: ', toaster);
     
         var loader = new OBJLoader();
     
-        // loader.load('../../assets/models/smeg-toaster/cube1m.obj', function (mesh) {
+        // loader.load('assets/models/cube/cube1m.obj', function (mesh) {
         //     mesh.name = "cube-1m";
         //     mesh.children.forEach(function (child) {
         //         child.material = material;
         //         pickableMeshes.push(child);
         //     });
-        //     mesh.scale.set(0.1,0.1,0.1)
+        //     mesh.scale.set(0.2,0.2,0.2)
         //     toaster.add(mesh);
         // });
     
-        loader.load('../../assets/models/smeg-toaster/smeg-toaster-body.obj', function (mesh) {
+        loader.load('assets/models/smeg-toaster/smeg-toaster-body.obj', function (mesh) {
             mesh.name = "toaster-body";
             mesh.children.forEach(function (child) {
                 child.material = material;
@@ -106,10 +109,11 @@ function init() {
             toaster.add(mesh);
         });
     
-        loader.load('../../assets/models/smeg-toaster/smeg-toaster-lever.obj', function (mesh) {
+        loader.load('assets/models/smeg-toaster/smeg-toaster-lever.obj', function (mesh) {
             mesh.name = "toaster-lever";
             mesh.children.forEach(function (child) {
                 child.material = material;
+                // child.geometry.castShadow = true;
                 pickableMeshes.push(child);
             });
             toaster.add(mesh);
@@ -145,8 +149,8 @@ function init() {
         // gui.add( camera.position , 'z', -100, 0 );
         // gui.add(material, 'metalness', 0, 1, 0.01);
         // gui.add(material, 'roughness', 0, 1, 0.01);
-        gui.add(controls, 'bouncingSpeed', 0, 0.5);
-        gui.add(controls, 'heightScale', 0, 3, 0.1);
+        // gui.add(controls, 'bouncingSpeed', 0, 0.5);
+        // gui.add(controls, 'heightScale', 0, 3, 0.1);
         
         const debugFolder = gui.addFolder('Debug');
         debugFolder.add(controls, 'outputObjects');
@@ -193,9 +197,9 @@ function init() {
         // bounce the toaster up and down
         step += controls.bouncingSpeed;
         // const toaster = scene.getObjectByName( "toaster" );
-        if(toaster){
-            toaster.position.y = controls.heightScale * Math.sin(step);
-        }
+        // if(toaster){
+        //     toaster.position.y = controls.heightScale * Math.sin(step);
+        // }
 
         // render using requestAnimationFrame
         window.requestAnimationFrame(render);
