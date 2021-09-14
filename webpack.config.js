@@ -1,5 +1,6 @@
 const path = require('path');
 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // Set mode
@@ -9,17 +10,46 @@ const devMode = argv.mode !== 'production';
 module.exports = {
     mode: argv.mode,
     devtool: devMode ? 'source-map' : false,
-    entry: './src/index.js',
+    entry: {
+        index: './src/index.js',
+    },
     output: {
         path: path.resolve(__dirname, 'docs'),
-        filename: 'bundle.js',
+        filename: '[name].bundle.js',
+    },
+    optimization: {
+        runtimeChunk: 'single',
+        splitChunks: {
+            chunks: 'all',
+            maxInitialRequests: Infinity,
+            minSize: 0,
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name(module) {
+                        // get the name. E.g. node_modules/packageName/not/this/part.js
+                        // or node_modules/packageName
+                        const packageName = module.context.match(
+                            /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+                        )[1];
+
+                        // npm package names are URL-safe, but some servers don't like @ symbols
+                        return `npm.${packageName.replace('@', '')}`;
+                    },
+                },
+            },
+        },
     },
     plugins: [
         new CopyWebpackPlugin({
             patterns: [
-                { from: 'src/index.html', to: '.' },
-                { from: 'src/assets', to: './assets' }
+                { from: 'src/css', to: './css' },
+                { from: 'src/assets', to: './assets' },
             ],
+        }),
+        new HtmlWebpackPlugin({
+            template: 'src/index.html',
+            // favicon: `src/favicon.ico`,
         }),
     ],
     performance: {
