@@ -8,18 +8,15 @@ import {
     TubeGeometry,
     MeshBasicMaterial,
     MeshStandardMaterial,
-    sRGBEncoding,
     TextureLoader,
     EquirectangularReflectionMapping,
-    WebGLCubeRenderTarget,
-    CubeTextureLoader,
     PMREMGenerator,
-    AmbientLight,
-    DirectionalLight,
     Raycaster,
     CatmullRomCurve3,
-    
+    AmbientLight,
+    DirectionalLight,
 } from 'three';
+
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import * as dat from 'three/examples/jsm/libs/dat.gui.module';
@@ -42,82 +39,82 @@ function init() {
 
     // initialize controls
     var orbitControls = new OrbitControls(camera, renderer.domElement);
-    orbitControls.autoRotate = true;
+    orbitControls.autoRotate = false;
 
     var step = 0;
     var controls;
+    const pickableMeshes = [];
+    const toaster = new Group();
 
     initLights();
 
     const textureLoader = new TextureLoader();
     const pmremGenerator = new PMREMGenerator(renderer);
 
-    const environmentMap = textureLoader.load('assets/textures/photosphere/CT-office.jpg', tx => {
-        scene.environment = pmremGenerator.fromEquirectangular(tx).texture;
-    });
+    const environmentMap = textureLoader.load(
+        'assets/textures/photosphere/HDR_110_Tunnel_Bg.jpg',
+        (tx) => {
+            scene.environment = pmremGenerator.fromEquirectangular(tx).texture;
+        }
+    );
     environmentMap.mapping = EquirectangularReflectionMapping;
-    // sRGBEncoding
 
-    scene.environment = environmentMap;
-    // scene.background = environmentMap;
-
+    scene.background = environmentMap;
 
     var material = new MeshStandardMaterial({
         color: 0xffffff,
-        metalness: 0.9,
+        metalness: 1,
         roughness: 0,
     });
 
-    var redLaserMat = new MeshBasicMaterial({color: 0xff0000, transparent: true, opacity: 0.6});
-    
-    const pickableMeshes = [];
-    const toaster = new Group();
-
-    initScene();
+    var redLaserMat = new MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.6 });
 
     initGUI();
+
+    initScene();
 
     // add the output of the renderer to the html element
     document.getElementById('webgl-output').appendChild(renderer.domElement);
     render();
 
-
     function initScene() {
-        toaster.name = "toaster";
+        toaster.name = 'toaster';
         scene.add(toaster);
         // console.log('Added toaster group: ', toaster);
-    
+
         var loader = new OBJLoader();
-    
-        // loader.load('assets/models/cube/cube1m.obj', function (mesh) {
-        //     mesh.name = "cube-1m";
+
+        loader.load('assets/models/cube/cube1m.obj', function (mesh) {
+            mesh.name = 'cube-1m';
+            mesh.children.forEach(function (child) {
+                child.material = material;
+                pickableMeshes.push(child);
+            });
+            mesh.scale.set(0.2, 0.2, 0.2);
+            toaster.add(mesh);
+        });
+
+        // loader.load('assets/models/smeg-toaster/smeg-toaster-body.obj', function (mesh) {
+        //     mesh.name = "toaster-body";
         //     mesh.children.forEach(function (child) {
         //         child.material = material;
+        //         child.geometry.castShadow = true;
+        //         child.geometry.receiveShadow = true;
         //         pickableMeshes.push(child);
         //     });
-        //     mesh.scale.set(0.2,0.2,0.2)
         //     toaster.add(mesh);
         // });
-    
-        loader.load('assets/models/smeg-toaster/smeg-toaster-body.obj', function (mesh) {
-            mesh.name = "toaster-body";
-            mesh.children.forEach(function (child) {
-                child.material = material;
-                // child.geometry.castShadow = true;
-                pickableMeshes.push(child);
-            });
-            toaster.add(mesh);
-        });
-    
-        loader.load('assets/models/smeg-toaster/smeg-toaster-lever.obj', function (mesh) {
-            mesh.name = "toaster-lever";
-            mesh.children.forEach(function (child) {
-                child.material = material;
-                // child.geometry.castShadow = true;
-                pickableMeshes.push(child);
-            });
-            toaster.add(mesh);
-        });
+
+        // loader.load('assets/models/smeg-toaster/smeg-toaster-lever.obj', function (mesh) {
+        //     mesh.name = "toaster-lever";
+        //     mesh.children.forEach(function (child) {
+        //         child.material = material;
+        //         child.geometry.castShadow = true;
+        //         child.geometry.receiveShadow = true;
+        //         pickableMeshes.push(child);
+        //     });
+        //     toaster.add(mesh);
+        // });
     }
 
     function initLights() {
@@ -132,17 +129,17 @@ function init() {
     }
 
     function initGUI() {
-        controls = new function () {
+        controls = new (function () {
             this.heightScale = 0.2;
             this.bouncingSpeed = 0.04;
-    
+
             this.outputObjects = function () {
                 console.log(scene.children);
-            }
-    
+            };
+
             this.showRay = false;
-        };
-    
+        })();
+
         const gui = new dat.GUI();
         // gui.add( camera.position , 'x', -50, 50 );
         // gui.add( camera.position , 'y', -50, 50 );
@@ -151,14 +148,14 @@ function init() {
         // gui.add(material, 'roughness', 0, 1, 0.01);
         // gui.add(controls, 'bouncingSpeed', 0, 0.5);
         // gui.add(controls, 'heightScale', 0, 3, 0.1);
-        
+
         const debugFolder = gui.addFolder('Debug');
         debugFolder.add(controls, 'outputObjects');
         debugFolder.add(controls, 'showRay').onChange(function (e) {
-            if (tube) scene.remove(tube)
+            if (tube) scene.remove(tube);
         });
-        debugFolder.add(mouse, 'x').step(0.01).name("mouse x").listen();
-        debugFolder.add(mouse, 'y').step(0.01).name("mouse y").listen();
+        debugFolder.add(mouse, 'x').step(0.01).name('mouse x').listen();
+        debugFolder.add(mouse, 'y').step(0.01).name('mouse y').listen();
         // debugFolder.open();
     }
 
@@ -167,16 +164,16 @@ function init() {
         stats.update();
         orbitControls.update(clock.getDelta());
 
-	    // update the picking ray with the camera and mouse position
-	    raycaster.setFromCamera( mouse, camera );
+        // update the picking ray with the camera and mouse position
+        raycaster.setFromCamera(mouse, camera);
 
         // detect objects intersecting the picking ray
-	    const intersects = raycaster.intersectObjects( pickableMeshes );
-    
+        const intersects = raycaster.intersectObjects(pickableMeshes);
+
         if (intersects.length > 0) {
             // offset source of line to just below camera
             var cameraPosition = camera.position.clone();
-            cameraPosition.y = cameraPosition.y - 0.2; 
+            cameraPosition.y = cameraPosition.y - 0.2;
 
             var points = [];
             points.push(cameraPosition);
@@ -187,7 +184,7 @@ function init() {
             if (tube) {
                 scene.remove(tube);
             }
-            
+
             if (controls.showRay) {
                 tube = new Mesh(tubeGeometry, redLaserMat);
                 scene.add(tube);
@@ -209,7 +206,11 @@ function init() {
     var tube;
 
     function onDocumentMouseDown(event) {
-        var vector = new Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+        var vector = new Vector3(
+            (event.clientX / window.innerWidth) * 2 - 1,
+            -(event.clientY / window.innerHeight) * 2 + 1,
+            0.5
+        );
         vector = vector.unproject(camera);
 
         var raycaster = new Raycaster(camera.position, vector.sub(camera.position).normalize());
@@ -223,10 +224,10 @@ function init() {
         }
     }
 
-    function onDocumentMouseMove( event ) {
+    function onDocumentMouseMove(event) {
         // update mouse position in normalized device coordinates (-1 to +1)
-        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     }
 
     function onResize() {
