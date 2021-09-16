@@ -31,7 +31,7 @@ function init() {
 
     var stats = util.initStats();
     var renderer = util.initRenderer();
-    var camera = util.initCamera(new Vector3(-20, 22, 48));
+    var camera = util.initCamera(new Vector3(48, 16, 0));
     var scene = new Scene();
     var clock = new Clock();
     const raycaster = new Raycaster();
