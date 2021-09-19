@@ -15,6 +15,9 @@ import {
     CatmullRomCurve3,
     AmbientLight,
     DirectionalLight,
+    LinearMipmapLinearFilter,
+    LinearFilter,
+    NearestFilter,
 } from 'three';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -31,7 +34,7 @@ function init() {
 
     var stats = util.initStats();
     var renderer = util.initRenderer();
-    var camera = util.initCamera(new Vector3(48, 16, 0));
+    var camera = util.initCamera(new Vector3(48, 8, 0));
     var scene = new Scene();
     var clock = new Clock();
     const raycaster = new Raycaster();
@@ -49,17 +52,26 @@ function init() {
     initLights();
 
     const textureLoader = new TextureLoader();
-    const pmremGenerator = new PMREMGenerator(renderer);
 
-    const environmentMap = textureLoader.load(
-        'assets/textures/photosphere/HDR_110_Tunnel_Bg.jpg',
+    // background
+    const backgroundTexture = textureLoader.load(
+        'assets/textures/photosphere/HDR_110_Tunnel_Bg.jpg'
+    );
+    backgroundTexture.mapping = EquirectangularReflectionMapping;
+    scene.background = backgroundTexture;
+
+    // env
+    // const pmremGenerator = new PMREMGenerator(renderer);
+    const envTexture = textureLoader.load(
+        'assets/textures/photosphere/HDR_110_Tunnel_Bg_2k_sharper.jpg',
         (tx) => {
-            scene.environment = pmremGenerator.fromEquirectangular(tx).texture;
+            tx.mapping = EquirectangularReflectionMapping;
+            tx.minFilter = LinearFilter;
+
+            scene.environment = tx;
+            // scene.environment = pmremGenerator.fromEquirectangular(tx).texture;
         }
     );
-    environmentMap.mapping = EquirectangularReflectionMapping;
-
-    scene.background = environmentMap;
 
     var material = new MeshStandardMaterial({
         color: 0xffffff,
@@ -141,11 +153,11 @@ function init() {
         })();
 
         const gui = new dat.GUI();
-        // gui.add( camera.position , 'x', -50, 50 );
-        // gui.add( camera.position , 'y', -50, 50 );
-        // gui.add( camera.position , 'z', -100, 0 );
-        // gui.add(material, 'metalness', 0, 1, 0.01);
-        // gui.add(material, 'roughness', 0, 1, 0.01);
+        // gui.add(camera.position, 'x', -500, 500);
+        // gui.add(camera.position, 'y', -50, 50);
+        // gui.add(camera.position, 'z', -500, 500);
+        gui.add(material, 'metalness', 0, 1, 0.01);
+        gui.add(material, 'roughness', 0, 0.2, 0.001);
         // gui.add(controls, 'bouncingSpeed', 0, 0.5);
         // gui.add(controls, 'heightScale', 0, 3, 0.1);
 
