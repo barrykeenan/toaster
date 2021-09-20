@@ -1,16 +1,4 @@
-import {
-    Scene,
-    Clock,
-    Vector2,
-    Vector3,
-    Group,
-    Mesh,
-    TubeGeometry,
-    MeshBasicMaterial,
-    Raycaster,
-    CatmullRomCurve3,
-    Color,
-} from 'three';
+import { Clock, Vector3, MeshBasicMaterial, Color } from 'three';
 
 import { initLoadingManager } from './components/loader.js';
 import { initStats } from './components/stats.js';
@@ -18,16 +6,12 @@ import { initRenderer } from './components/renderer.js';
 import { initCamera } from './components/camera.js';
 import { SceneManager } from './components/sceneManager.js';
 import { initLights } from './components/lights.js';
+import { ObjectPicker } from './components/objectPicker.js';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'three/examples/jsm/libs/dat.gui.module';
 
 function init() {
-    // listen to the resize events
-    window.addEventListener('resize', onResize, false);
-    document.addEventListener('mousemove', onDocumentMouseMove, false);
-    document.addEventListener('mousedown', onDocumentMouseDown, false);
-
     const loadingManager = initLoadingManager();
     const stats = initStats();
     const renderer = initRenderer();
@@ -39,23 +23,22 @@ function init() {
     const lights = initLights(scene);
     var clock = new Clock();
 
-    const raycaster = new Raycaster();
-    const mouse = new Vector2();
-
-    // initialize controls
     var orbitControls = new OrbitControls(camera, renderer.domElement);
     orbitControls.autoRotate = true;
 
+    const objectPicker = new ObjectPicker(sceneManager.scene, camera, sceneManager.pickableMeshes);
+
     var step = 0;
     var controls;
-    const pickableMeshes = [];
-    const toaster = new Group();
 
     var redLaserMat = new MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.6 });
 
-    initGUI();
+    // bindEvents
+    window.addEventListener('resize', updateRenderSize, false);
 
-    render();
+    // initGUI();
+
+    renderFrame();
 
     function initGUI() {
         controls = new (function () {
@@ -110,78 +93,28 @@ function init() {
         });
     }
 
-    function render() {
+    function renderFrame() {
         // update the stats and the controls
         stats.update();
         orbitControls.update(clock.getDelta());
 
-        // update the picking ray with the camera and mouse position
-        raycaster.setFromCamera(mouse, camera);
-
-        // detect objects intersecting the picking ray
-        const intersects = raycaster.intersectObjects(pickableMeshes);
-
-        if (intersects.length > 0) {
-            // offset source of line to just below camera
-            var cameraPosition = camera.position.clone();
-            cameraPosition.y = cameraPosition.y - 0.2;
-
-            var points = [];
-            points.push(cameraPosition);
-            points.push(intersects[0].point);
-
-            var tubeGeometry = new TubeGeometry(new CatmullRomCurve3(points), 60, 0.001);
-
-            if (tube) {
-                scene.remove(tube);
-            }
-
-            if (controls.showRay) {
-                tube = new Mesh(tubeGeometry, redLaserMat);
-                scene.add(tube);
-            }
-        }
+        objectPicker.update(true);
 
         // bounce the toaster up and down
-        step += controls.bouncingSpeed;
+        // step += controls.bouncingSpeed;
         // const toaster = scene.getObjectByName( "toaster" );
         // if(toaster){
         //     toaster.position.y = controls.heightScale * Math.sin(step);
         // }
 
-        // render using requestAnimationFrame
-        window.requestAnimationFrame(render);
-        renderer.render(scene, camera);
+        // render frame
+        renderer.render(sceneManager.scene, camera);
+
+        // keep looping
+        window.requestAnimationFrame(renderFrame);
     }
 
-    var tube;
-
-    function onDocumentMouseDown(event) {
-        var vector = new Vector3(
-            (event.clientX / window.innerWidth) * 2 - 1,
-            -(event.clientY / window.innerHeight) * 2 + 1,
-            0.5
-        );
-        vector = vector.unproject(camera);
-
-        var raycaster = new Raycaster(camera.position, vector.sub(camera.position).normalize());
-        var intersects = raycaster.intersectObjects(pickableMeshes);
-
-        if (intersects.length > 0) {
-            // console.log(intersects[0]);
-            console.log('Picked:', intersects[0].object);
-            // intersects[0].object.material.transparent = true;
-            // intersects[0].object.material.opacity = 0.1;
-        }
-    }
-
-    function onDocumentMouseMove(event) {
-        // update mouse position in normalized device coordinates (-1 to +1)
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    }
-
-    function onResize() {
+    function updateRenderSize() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
