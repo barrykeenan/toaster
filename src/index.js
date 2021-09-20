@@ -19,6 +19,7 @@ import {
     PointLightHelper,
 } from 'three';
 
+import { initLoadingManager } from './components/loader.js';
 import { initStats } from './components/stats.js';
 import { initRenderer } from './components/renderer.js';
 import { initCamera } from './components/camera.js';
@@ -33,6 +34,7 @@ function init() {
     document.addEventListener('mousemove', onDocumentMouseMove, false);
     document.addEventListener('mousedown', onDocumentMouseDown, false);
 
+    const loadingManager = initLoadingManager();
     const stats = initStats();
     const renderer = initRenderer();
     const camera = initCamera(new Vector3(-20, 22, 48));
