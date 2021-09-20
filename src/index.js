@@ -20,6 +20,7 @@ import {
 } from 'three';
 
 import { initStats } from './components/stats.js';
+import { initRenderer } from './components/renderer.js';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
@@ -34,7 +35,7 @@ function init() {
     document.addEventListener('mousedown', onDocumentMouseDown, false);
 
     const stats = initStats();
-    var renderer = util.initRenderer();
+    const renderer = initRenderer();
     var camera = util.initCamera(new Vector3(-20, 22, 48));
     var scene = new Scene();
     var clock = new Clock();
