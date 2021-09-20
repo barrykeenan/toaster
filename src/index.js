@@ -19,6 +19,8 @@ import {
     PointLightHelper,
 } from 'three';
 
+import { initStats } from './components/stats.js';
+
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import * as dat from 'three/examples/jsm/libs/dat.gui.module';
@@ -31,7 +33,7 @@ function init() {
     document.addEventListener('mousemove', onDocumentMouseMove, false);
     document.addEventListener('mousedown', onDocumentMouseDown, false);
 
-    var stats = util.initStats();
+    const stats = initStats();
     var renderer = util.initRenderer();
     var camera = util.initCamera(new Vector3(-20, 22, 48));
     var scene = new Scene();
