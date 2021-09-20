@@ -21,12 +21,11 @@ import {
 
 import { initStats } from './components/stats.js';
 import { initRenderer } from './components/renderer.js';
+import { initCamera } from './components/camera.js';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import * as dat from 'three/examples/jsm/libs/dat.gui.module';
-
-import * as util from './util';
 
 function init() {
     // listen to the resize events
@@ -36,7 +35,8 @@ function init() {
 
     const stats = initStats();
     const renderer = initRenderer();
-    var camera = util.initCamera(new Vector3(-20, 22, 48));
+    const camera = initCamera(new Vector3(-20, 22, 48));
+
     var scene = new Scene();
     var clock = new Clock();
     const raycaster = new Raycaster();
