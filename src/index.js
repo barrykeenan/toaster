@@ -7,10 +7,6 @@ import {
     Mesh,
     TubeGeometry,
     MeshBasicMaterial,
-    MeshStandardMaterial,
-    TextureLoader,
-    EquirectangularReflectionMapping,
-    PMREMGenerator,
     Raycaster,
     CatmullRomCurve3,
     HemisphereLight,
@@ -23,9 +19,9 @@ import { initLoadingManager } from './components/loader.js';
 import { initStats } from './components/stats.js';
 import { initRenderer } from './components/renderer.js';
 import { initCamera } from './components/camera.js';
+import { SceneManager } from './components/sceneManager.js';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import * as dat from 'three/examples/jsm/libs/dat.gui.module';
 
 function init() {
@@ -39,7 +35,10 @@ function init() {
     const renderer = initRenderer();
     const camera = initCamera(new Vector3(-20, 22, 48));
 
-    var scene = new Scene();
+    // TODO: MaterialManager?
+    const sceneManager = new SceneManager(loadingManager);
+    var scene = sceneManager.scene;
+
     var clock = new Clock();
     const raycaster = new Raycaster();
     const mouse = new Vector2();
@@ -56,74 +55,11 @@ function init() {
     var hemiLight = new HemisphereLight(0xb3a79f, 0x635543, 3);
     initLights();
 
-    const textureLoader = new TextureLoader();
-    const pmremGenerator = new PMREMGenerator(renderer);
-
-    const environmentMap = textureLoader.load('assets/textures/photosphere/CT-office.jpg', (tx) => {
-        scene.environment = pmremGenerator.fromEquirectangular(tx).texture;
-    });
-    environmentMap.mapping = EquirectangularReflectionMapping;
-
-    // scene.background = environmentMap;
-
-    var material = new MeshStandardMaterial({
-        color: 0xffffff,
-        // metalness: 0,
-        // roughness: 1,
-        metalness: 0.8,
-        roughness: 0,
-        envMapIntensity: 0.78,
-    });
-
     var redLaserMat = new MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.6 });
 
     initGUI();
 
-    initScene();
-
-    // add the output of the renderer to the html element
-    document.getElementById('webgl-output').appendChild(renderer.domElement);
     render();
-
-    function initScene() {
-        toaster.name = 'toaster';
-        scene.add(toaster);
-        // console.log('Added toaster group: ', toaster);
-
-        var loader = new OBJLoader();
-
-        // loader.load('assets/models/cube/cube1m.obj', function (mesh) {
-        //     mesh.name = "cube-1m";
-        //     mesh.children.forEach(function (child) {
-        //         child.material = material;
-        //         pickableMeshes.push(child);
-        //     });
-        //     mesh.scale.set(0.2,0.2,0.2)
-        //     toaster.add(mesh);
-        // });
-
-        loader.load('assets/models/smeg-toaster/smeg-toaster-body.obj', function (mesh) {
-            mesh.name = 'toaster-body';
-            mesh.children.forEach(function (child) {
-                child.material = material;
-                child.geometry.castShadow = true;
-                child.geometry.receiveShadow = true;
-                pickableMeshes.push(child);
-            });
-            toaster.add(mesh);
-        });
-
-        loader.load('assets/models/smeg-toaster/smeg-toaster-lever.obj', function (mesh) {
-            mesh.name = 'toaster-lever';
-            mesh.children.forEach(function (child) {
-                child.material = material;
-                child.geometry.castShadow = true;
-                child.geometry.receiveShadow = true;
-                pickableMeshes.push(child);
-            });
-            toaster.add(mesh);
-        });
-    }
 
     function initLights() {
         // Ambient
@@ -191,8 +127,8 @@ function init() {
         // gui.add( camera.position , 'x', -50, 50 );
         // gui.add( camera.position , 'y', -50, 50 );
         // gui.add( camera.position , 'z', -100, 0 );
-        gui.add(material, 'metalness', 0, 1, 0.01);
-        gui.add(material, 'roughness', 0, 1, 0.01);
+        // gui.add(material, 'metalness', 0, 1, 0.01);
+        // gui.add(material, 'roughness', 0, 1, 0.01);
         // gui.add(controls, 'bouncingSpeed', 0, 0.5);
         // gui.add(controls, 'heightScale', 0, 3, 0.1);
 
