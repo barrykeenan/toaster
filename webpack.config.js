@@ -17,6 +17,16 @@ module.exports = {
         path: path.resolve(__dirname, 'docs'),
         filename: '[name].bundle.js',
     },
+    module: {
+        rules: [
+            {
+                test: /\.(css)$/,
+                // pass CSS to style-loader as a single string
+                // style-loader embeds CSS in style tag in index.html (dev only)
+                use: ['style-loader', 'css-loader'],
+            },
+        ],
+    },
     optimization: {
         runtimeChunk: 'single',
         splitChunks: {

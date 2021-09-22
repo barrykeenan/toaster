@@ -1,3 +1,5 @@
+import './css/default.css';
+
 import { Clock, Vector3 } from 'three';
 
 import { initLoadingManager } from './components/loader.js';
@@ -20,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // TODO: MaterialManager?
     const sceneManager = new SceneManager(loadingManager);
+    // const sceneManager = new App(loadingManager);
     const scene = sceneManager.scene;
     const lights = initLights(scene);
     const clock = new Clock();
