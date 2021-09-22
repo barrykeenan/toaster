@@ -22,8 +22,15 @@ module.exports = {
             {
                 test: /\.(css)$/,
                 // pass CSS to style-loader as a single string
-                // style-loader embeds CSS in style tag in index.html (dev only)
+
                 use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: /\.(s(a|c)ss)$/,
+                // style-loader embeds CSS in style tag in index.html (dev only)
+                // css-loader collects all CSS as a single string
+                // sass-loader compiles sass to css
+                use: ['style-loader', 'css-loader', 'sass-loader'],
             },
         ],
     },

@@ -1,4 +1,4 @@
-import './css/default.css';
+import './sass/styles.scss';
 
 import { Clock, Vector3 } from 'three';
 
