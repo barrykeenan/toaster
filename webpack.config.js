@@ -59,10 +59,7 @@ module.exports = {
     },
     plugins: [
         new CopyWebpackPlugin({
-            patterns: [
-                { from: 'src/css', to: './css' },
-                { from: 'src/assets', to: './assets' },
-            ],
+            patterns: [{ from: 'src/assets', to: './assets' }],
         }),
         new HtmlWebpackPlugin({
             template: 'src/index.html',
