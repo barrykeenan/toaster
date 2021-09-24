@@ -4,7 +4,11 @@
 
 
 // Generic
-@import 'normalize'; // Imported globally from node modules using sass-loader include path at compilation// Elements
+@import 'normalize'; // Imported globally from node modules using sass-loader include path at compilation
+@import 'generic/generic.box-sizing';
+@import 'generic/generic.reset';
+
+// Elements
 @import 'elements/elements.page';
 
 // Components
