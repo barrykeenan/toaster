@@ -20,12 +20,6 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(css)$/,
-                // pass CSS to style-loader as a single string
-
-                use: ['style-loader', 'css-loader'],
-            },
-            {
                 test: /\.(s(a|c)ss)$/,
                 use: [
                     // Creates `<style>` nodes from JS strings
