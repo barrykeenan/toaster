@@ -2,6 +2,9 @@
 // Main
 // =============================================================================
 
+// Settings
+@import 'settings/settings.colors';
+@import 'settings/settings.global';
 
 // Generic
 @import 'normalize'; // Imported globally from node modules using sass-loader include path at compilation
