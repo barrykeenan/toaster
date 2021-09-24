@@ -6,10 +6,7 @@ import { WebGLRenderer, Color, PCFSoftShadowMap } from 'three';
  * @param additionalProperties Additional properties to pass into the renderer
  */
 export function initRenderer(additionalProperties) {
-    var props =
-        typeof additionalProperties !== 'undefined' && additionalProperties
-            ? additionalProperties
-            : {};
+    var props = typeof additionalProperties !== 'undefined' && additionalProperties ? additionalProperties : {};
 
     var renderer = new WebGLRenderer(props);
     // const renderer = new WebGLRenderer({ antialias: true });
@@ -23,7 +20,8 @@ export function initRenderer(additionalProperties) {
     renderer.shadowMap.type = PCFSoftShadowMap;
     renderer.physicallyCorrectLights = true;
 
-    document.body.appendChild(renderer.domElement);
+    // TODO if dom element param, otherwise document.body.appendChild(renderer.domElement)
+    document.getElementById('webgl-output').appendChild(renderer.domElement);
 
     return renderer;
 }

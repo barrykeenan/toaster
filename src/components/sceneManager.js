@@ -21,19 +21,20 @@ class SceneManager {
 
         this.materials = {
             materialOne: new MeshStandardMaterial({
+                // color: 0x00ffff,
                 color: 0xffffff,
-                metalness: 0.9,
+                metalness: 0.15,
                 roughness: 0.05,
             }),
         };
 
         this.pickableMeshes = [];
 
-        // this.cube();
-        this.toaster();
+        this.cube();
+        // this.toaster();
 
         // this.skybox();
-        this.environmentMap();
+        // this.environmentMap();
     }
 
     skybox() {
@@ -44,14 +45,11 @@ class SceneManager {
 
     // TODO: move to lights?
     environmentMap() {
-        const environmentMap = this.textureLoader.load(
-            'photosphere/CT-office-2k-sharper-90.webp',
-            (tx) => {
-                tx.mapping = EquirectangularReflectionMapping;
-                // linear? also try 4k demo
-                this.scene.environment = tx;
-            }
-        );
+        const environmentMap = this.textureLoader.load('photosphere/CT-office-2k-sharper-90.webp', (tx) => {
+            tx.mapping = EquirectangularReflectionMapping;
+            // linear? also try 4k demo
+            this.scene.environment = tx;
+        });
     }
 
     cube() {

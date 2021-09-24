@@ -1,0 +1,133 @@
+// =============================================================================
+// Colour Picker
+// =============================================================================
+
+// Vars
+$size: 3rem;
+$border-size: 0px;
+
+// Mixin to change sizes
+@mixin size($size_base: $size) {
+    width: $size_base;
+    height: $size_base;
+    border-radius: $size_base;
+    line-height: $size_base;
+}
+
+// Mixin to change colors
+@mixin color($bg, $color: #fff) {
+    // > [type="radio"],
+    // > [type="checkbox"] {
+    //   + label {
+    //     background-color: $bg;
+    //     color: $color;
+    //   }
+    // }
+
+    background-color: $bg;
+    color: $color;
+}
+
+// TODO: move
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    // border: 1px solid red;
+}
+
+.sr-only {
+    display: none;
+}
+
+.color-picker {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 0.5rem auto;
+    max-width: 80ch;
+    border: none;
+}
+
+.swatch {
+    position: relative;
+    margin: 0.5rem;
+    @include size(3rem);
+    display: inline-block;
+    transition: transform 0.2s, opacity 0.2s;
+
+    > [type='radio'],
+    > [type='checkbox'] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        opacity: 0;
+
+        + label {
+            @include size;
+            text-align: center;
+            position: absolute;
+            cursor: pointer;
+        }
+
+        &:checked {
+            + label {
+            }
+        }
+    }
+
+    &:hover {
+        box-shadow: 0 0 0 0.1rem #fff;
+        transform: scale(1.1);
+    }
+
+    &.orange {
+        > [type='radio'],
+        > [type='checkbox'] {
+            + label {
+                @include color($bg: #e67e22);
+            }
+        }
+    }
+    &.red {
+        > [type='radio'],
+        > [type='checkbox'] {
+            + label {
+                @include color($bg: #e74c3c);
+            }
+        }
+    }
+    &.yellow {
+        > [type='radio'],
+        > [type='checkbox'] {
+            + label {
+                @include color($bg: #f1c40f);
+            }
+        }
+    }
+    &.purple {
+        > [type='radio'],
+        > [type='checkbox'] {
+            + label {
+                @include color($bg: #9b59b6);
+            }
+        }
+    }
+    &.green {
+        > [type='radio'],
+        > [type='checkbox'] {
+            + label {
+                @include color($bg: #2ecc71);
+            }
+        }
+    }
+    &.blue {
+        > [type='radio'],
+        > [type='checkbox'] {
+            + label {
+                @include color($bg: #3498db);
+            }
+        }
+    }
+}

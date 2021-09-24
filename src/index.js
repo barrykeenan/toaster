@@ -10,6 +10,7 @@ import { SceneManager } from './components/sceneManager.js';
 import { initLights } from './components/lights.js';
 import { ObjectPicker } from './components/objectPicker.js';
 import { Controls } from './components/controls.js';
+import { ColourPicker } from './components/colour-picker.js';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
@@ -22,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // TODO: MaterialManager?
     const sceneManager = new SceneManager(loadingManager);
-    // const sceneManager = new App(loadingManager);
     const scene = sceneManager.scene;
     const lights = initLights(scene);
     const clock = new Clock();
@@ -31,7 +31,9 @@ document.addEventListener('DOMContentLoaded', function () {
     orbitControls.autoRotate = true;
 
     const objectPicker = new ObjectPicker(sceneManager.scene, camera, sceneManager.pickableMeshes);
-    const controls = new Controls(sceneManager.scene, sceneManager.materials, objectPicker);
+    // const controls = new Controls(sceneManager.scene, sceneManager.materials, objectPicker);
+
+    const colourPicker = new ColourPicker(sceneManager.materials);
 
     let step = 0;
 
@@ -50,14 +52,14 @@ document.addEventListener('DOMContentLoaded', function () {
         // update the stats and the controls
         stats.update();
         orbitControls.update(delta);
-        objectPicker.update(controls.showRay);
+        // objectPicker.update(controls.showRay);
 
         // bounce the toaster up and down
-        step += controls.bouncingSpeed;
-        const toaster = sceneManager.scene.getObjectByName('toaster');
-        if (toaster) {
-            toaster.position.y = controls.heightScale * Math.sin(step);
-        }
+        // step += controls.bouncingSpeed;
+        // const toaster = sceneManager.scene.getObjectByName('toaster');
+        // if (toaster) {
+        //     toaster.position.y = controls.heightScale * Math.sin(step);
+        // }
 
         // render frame
         renderer.render(sceneManager.scene, camera);

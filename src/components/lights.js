@@ -2,11 +2,12 @@ import { HemisphereLight, Color, PointLight, PointLightHelper } from 'three';
 
 export function initLights(scene) {
     // Ambient
-    // TODO: not needed
-    // const hemiLight = new HemisphereLight(0xb3a79f, 0x635543, 3);
-    // hemiLight.position.set(0, 150, 0);
+    // TODO: not needed when using envMap
+    const hemiLight = new HemisphereLight(0xb3a79f, 0x635543, 3);
+    hemiLight.position.set(0, 150, 0);
     // hemiLight.intensity = 0.4;
-    // scene.add(hemiLight);
+    hemiLight.intensity = 0.6;
+    scene.add(hemiLight);
 
     // Points
     const sphereSize = 2;

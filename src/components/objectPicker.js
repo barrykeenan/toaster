@@ -17,12 +17,17 @@ class ObjectPicker {
         });
         this.ray = null;
 
+        this.initComponents();
         this.bindEvents();
     }
 
+    initComponents() {
+        this.clickableArea = document.querySelector('#webgl-output');
+    }
+
     bindEvents() {
-        document.addEventListener('mousemove', this.updateMousePosition.bind(this), false);
-        document.addEventListener('mousedown', this.pickObject.bind(this), false);
+        this.clickableArea.addEventListener('mousemove', this.updateMousePosition.bind(this), false);
+        this.clickableArea.addEventListener('mousedown', this.pickObject.bind(this), false);
     }
 
     /**
