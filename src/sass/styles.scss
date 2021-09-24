@@ -2,7 +2,9 @@
 // Main
 // =============================================================================
 
-// Elements
+
+// Generic
+@import 'normalize'; // Imported globally from node modules using sass-loader include path at compilation// Elements
 @import 'elements/elements.page';
 
 // Components

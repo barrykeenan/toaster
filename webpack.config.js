@@ -27,10 +27,21 @@ module.exports = {
             },
             {
                 test: /\.(s(a|c)ss)$/,
-                // style-loader embeds CSS in style tag in index.html (dev only)
-                // css-loader collects all CSS as a single string
-                // sass-loader compiles sass to css
-                use: ['style-loader', 'css-loader', 'sass-loader'],
+                use: [
+                    // Creates `<style>` nodes from JS strings
+                    'style-loader',
+                    // Translates CSS into CommonJS
+                    'css-loader',
+                    // Compiles Sass to CSS
+                    {
+                        loader: 'sass-loader', // compiles Sass to CSS
+                        options: {
+                            sassOptions: {
+                                includePaths: ['./node_modules/normalize.css'],
+                            },
+                        },
+                    },
+                ],
             },
         ],
     },
@@ -46,9 +57,7 @@ module.exports = {
                     name(module) {
                         // get the name. E.g. node_modules/packageName/not/this/part.js
                         // or node_modules/packageName
-                        const packageName = module.context.match(
-                            /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-                        )[1];
+                        const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
 
                         // npm package names are URL-safe, but some servers don't like @ symbols
                         return `npm.${packageName.replace('@', '')}`;
