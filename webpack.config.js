@@ -2,6 +2,7 @@ const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 // Set mode
 const argv = require('yargs').argv;
@@ -22,8 +23,9 @@ module.exports = {
             {
                 test: /\.(s(a|c)ss)$/,
                 use: [
-                    // Creates `<style>` nodes from JS strings
-                    'style-loader',
+                    // In dev create `<style>` nodes from JS string.
+                    // In production generate css files
+                    devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
                     // Translates CSS into CommonJS
                     'css-loader',
                     // Compiles Sass to CSS
@@ -67,6 +69,10 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/index.html',
             // favicon: `src/favicon.ico`,
+        }),
+        new MiniCssExtractPlugin({
+            filename: '[name].css',
+            chunkFilename: '[id].css',
         }),
     ],
     performance: {
