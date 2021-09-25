@@ -7,7 +7,7 @@ export function initLights(scene) {
     hemiLight.position.set(0, 150, 0);
     // hemiLight.intensity = 0.4;
     hemiLight.intensity = 0.6;
-    // scene.add(hemiLight);
+    scene.add(hemiLight);
 
     // Points
     const sphereSize = 2;
