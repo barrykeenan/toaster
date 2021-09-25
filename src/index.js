@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
     orbitControls.enableDamping = true;
 
     const objectPicker = new ObjectPicker(sceneManager.scene, camera, sceneManager.pickableMeshes);
-    // const controls = new Controls(sceneManager.scene, sceneManager.materials, objectPicker);
+    // const controls = new Controls(camera, sceneManager, orbitControls, objectPicker);
 
     const colourPicker = new ColourPicker(sceneManager.materials);
 
