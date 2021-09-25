@@ -1,6 +1,6 @@
 import './sass/styles.scss';
 
-import { Clock, Vector3 } from 'three';
+import { Clock, Vector3, MathUtils } from 'three';
 
 import { initLoadingManager } from './components/loader.js';
 import { initStats } from './components/stats.js';
@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const loadingManager = initLoadingManager();
     const stats = initStats();
     const renderer = initRenderer();
-    const camera = initCamera(new Vector3(-20, 22, 48));
+    // TODO: fit camera to screen aspect
+    const camera = initCamera(new Vector3(-20, 22, 62));
 
     // TODO: MaterialManager?
     const sceneManager = new SceneManager(loadingManager);
@@ -28,10 +29,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const clock = new Clock();
 
     const orbitControls = new OrbitControls(camera, renderer.domElement);
+    orbitControls.target.y = -5; // pan up
+    orbitControls.enablePan = false;
+    // Dolly limits.
+    orbitControls.minDistance = 35;
+    orbitControls.maxDistance = 120;
+    // Vertical orbit limits.
+    orbitControls.minPolarAngle = MathUtils.degToRad(30);
+    orbitControls.maxPolarAngle = MathUtils.degToRad(120);
+
     orbitControls.autoRotate = true;
+    orbitControls.enableDamping = true;
 
     const objectPicker = new ObjectPicker(sceneManager.scene, camera, sceneManager.pickableMeshes);
-    // const controls = new Controls(sceneManager.scene, sceneManager.materials, objectPicker);
+    // const controls = new Controls(camera, sceneManager, orbitControls, objectPicker);
 
     const colourPicker = new ColourPicker(sceneManager.materials);
 
