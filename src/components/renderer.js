@@ -1,4 +1,4 @@
-import { WebGLRenderer, Color, PCFSoftShadowMap } from 'three';
+import { WebGLRenderer, PCFSoftShadowMap } from 'three';
 
 /**
  * Initialize a simple default renderer and binds it to the body dom element.
@@ -8,12 +8,12 @@ import { WebGLRenderer, Color, PCFSoftShadowMap } from 'three';
 export function initRenderer(additionalProperties) {
     var props = typeof additionalProperties !== 'undefined' && additionalProperties ? additionalProperties : {};
 
-    var renderer = new WebGLRenderer(props);
+    // var renderer = new WebGLRenderer(props);
+    const renderer = new WebGLRenderer({ alpha: true });
     // const renderer = new WebGLRenderer({ antialias: true });
     // renderer.setPixelRatio(window.devicePixelRatio); // perf hit
 
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(new Color(0x000000));
 
     renderer.shadowMap.enabled = true;
     renderer.shadowMapSoft = true;

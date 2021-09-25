@@ -15,7 +15,10 @@ html {
     font-family: $font-family-default-sans-serif;
     font-size: $font-size-base;
     line-height: $line-height-base;
-    background-color: $color-page-background;
+
+    background: rgb(43, 43, 35);
+    background: radial-gradient(circle, rgba(43, 43, 35, 1) 5%, rgba(29, 31, 29, 1) 33%, rgba(13, 13, 18, 1) 100%);
+
     color: $color-page-text;
     -webkit-tap-highlight-color: transparent;
 }
