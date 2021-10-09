@@ -2,3 +2,5 @@ node_modules/
 docs/
 notes/
 working/
+
+*.code-workspace
