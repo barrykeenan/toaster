@@ -67,10 +67,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // bounce the toaster up and down
         // step += controls.bouncingSpeed;
-        // const toaster = sceneManager.scene.getObjectByName('toaster');
-        // if (toaster) {
-        //     toaster.position.y = controls.heightScale * Math.sin(step);
-        // }
+        step += 0.05;
+        const toaster = sceneManager.scene.getObjectByName('toaster');
+        if (toaster) {
+            // toaster.position.y = controls.heightScale * Math.sin(step);
+            toaster.position.y = 0.15 * Math.sin(step);
+        }
 
         // render frame
         renderer.render(sceneManager.scene, camera);

@@ -31,9 +31,9 @@ class Controls {
 
         const shadowLight = this.scene.getObjectByName('shadow');
 
-        this.gui.add(shadowLight.position, 'y', 50, 150);
+        // this.gui.add(shadowLight.position, 'y', 50, 150);
         // this.gui.add(shadowLight, 'intensity', 7000, 10000);
-        this.gui.add(shadowLight.shadow, 'radius', 10, 300);
+        // this.gui.add(shadowLight.shadow, 'radius', 10, 300);
 
         // pointLight.shadow.mapSize.width = 512; // default
         // pointLight.shadow.mapSize.height = 512; // default
@@ -44,8 +44,8 @@ class Controls {
         // const toaster = this.scene.getObjectByName('toaster');
         // this.gui.add(toaster.position, 'y', -50, 50);
 
-        // this.gui.add(this, 'bouncingSpeed', 0, 0.5);
-        // this.gui.add(this, 'heightScale', 0, 3, 0.1);
+        this.gui.add(this, 'bouncingSpeed', 0, 0.5);
+        this.gui.add(this, 'heightScale', 0, 3, 0.1);
 
         // this.gui.add(orbitControls.target, 'y', -50, 50);
 

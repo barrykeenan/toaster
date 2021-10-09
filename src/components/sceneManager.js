@@ -18,10 +18,10 @@ class SceneManager {
         this.scene = new Scene();
 
         this.objLoader = new OBJLoader(loadingManager);
-        this.objLoader.setPath('assets/models/');
+        this.objLoader.setPath('assets/');
 
         this.textureLoader = new TextureLoader(loadingManager);
-        this.textureLoader.setPath('assets/textures/');
+        this.textureLoader.setPath('assets/');
 
         this.materials = {
             shadowMaterial: new ShadowMaterial({ opacity: 0.6 }),
@@ -46,22 +46,22 @@ class SceneManager {
         shadowCatcher.receiveShadow = true;
         this.scene.add(shadowCatcher);
 
-        this.cube();
-        // this.toaster();
+        // this.cube();
+        this.toaster();
 
         // this.skybox();
-        // this.environmentMap();
+        this.environmentMap();
     }
 
     skybox() {
-        const backgroundTexture = this.textureLoader.load('photosphere/CT-office.jpg');
+        const backgroundTexture = this.textureLoader.load('environments/CT-office.jpg');
         backgroundTexture.mapping = EquirectangularReflectionMapping;
         this.scene.background = backgroundTexture;
     }
 
     // TODO: move to lights?
     environmentMap() {
-        const environmentMap = this.textureLoader.load('photosphere/CT-office-2k-sharper-90.webp', (tx) => {
+        const environmentMap = this.textureLoader.load('environments/CT-office-2k-sharper-90.webp', (tx) => {
             tx.mapping = EquirectangularReflectionMapping;
             // linear? also try 4k demo
             this.scene.environment = tx;
@@ -86,39 +86,45 @@ class SceneManager {
     }
 
     toaster() {
+        // const occlusionRoughnessMetallic = this.textureLoader.load('models/toaster/textures/v2/webp/toaster_low_material_OcclusionRoughnessMetallic.webp');
+
+        this.materials.toaster = new MeshStandardMaterial({
+            normalMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Normal.jpg'),
+            metalnessMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Metallic.jpg'),
+            metalness: 1,
+            roughnessMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Roughness.jpg'),
+            map: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_BaseColor.jpg'),
+            aoMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Occlusion.jpg'),
+            aoMapIntensity: 0.75,
+            envMapIntensity: 0.9,
+        });
+        this.materials.toasterBody = this.materials.toaster.clone();
+
         const toaster = new Group();
         toaster.name = 'toaster';
         this.scene.add(toaster);
 
-        this.objLoader.load('smeg-toaster/smeg-toaster-body.obj', (mesh) => {
-            mesh.name = 'toaster-body';
+        this.objLoader.load('models/toaster/toaster.obj', (group) => {
+            const mesh = group.children[ 0 ];
+            mesh.geometry.attributes.uv2 = mesh.geometry.attributes.uv; // second UV set needed for aoMap
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            mesh.material = this.materials.toaster;
 
-            mesh.traverse(function (child) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            });
+            this.pickableMeshes.push(mesh);
 
-            mesh.children.forEach((child) => {
-                child.material = this.materials.chrome;
-
-                this.pickableMeshes.push(child);
-            });
             toaster.add(mesh);
         });
 
-        this.objLoader.load('smeg-toaster/smeg-toaster-lever.obj', (mesh) => {
-            mesh.name = 'toaster-lever';
+        this.objLoader.load('models/toaster/toaster_body.obj', (group) => {
+            const mesh = group.children[ 0 ];
+            mesh.geometry.attributes.uv2 = mesh.geometry.attributes.uv; // second UV set needed for aoMap
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            mesh.material = this.materials.toasterBody;
 
-            mesh.traverse(function (child) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            });
+            this.pickableMeshes.push(mesh);
 
-            mesh.children.forEach((child) => {
-                child.material = this.materials.chrome;
-
-                this.pickableMeshes.push(child);
-            });
             toaster.add(mesh);
         });
     }

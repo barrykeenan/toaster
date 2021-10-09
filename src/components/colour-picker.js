@@ -18,7 +18,9 @@ class ColourPicker {
                 // TODO: attach events to radio input or the label?
                 const style = getComputedStyle(swatch);
 
-                this.materials.chrome.color.setStyle(style.backgroundColor);
+                this.materials.toasterBody.color.setStyle(style.backgroundColor);
+                this.materials.toasterBody.metalness = 0.2;
+                this.materials.toasterBody.roughness = 1.1;
             });
         });
     }
