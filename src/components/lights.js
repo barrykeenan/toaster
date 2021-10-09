@@ -7,12 +7,12 @@ export function initLights(scene) {
     hemiLight.position.set(0, 150, 0);
     // hemiLight.intensity = 0.4;
     hemiLight.intensity = 0.6;
-    scene.add(hemiLight);
+    // scene.add(hemiLight);
 
     // Points
     const sphereSize = 2;
 
-    const shadowLight = new PointLight(0xffffd9, 0);
+    const shadowLight = new PointLight(0xffffd9, 20000);
     shadowLight.name = 'shadow';
     shadowLight.position.set(0, 150, 0); // scene origin is 1.5m off ground
     shadowLight.decay = 2;
@@ -30,33 +30,38 @@ export function initLights(scene) {
     var shadowHelper = new CameraHelper(shadowLight.shadow.camera);
     // scene.add(shadowHelper);
 
-    const pointLight = new PointLight(0xffffd9, 50000);
+    const pointLight = new PointLight(0xffffd9, 30000);
     pointLight.position.set(180, 100, 200); // scene origin is 1.5m off ground
     pointLight.decay = 2;
+    // pointLight.castShadow = true;
     scene.add(pointLight);
     // scene.add( new PointLightHelper( pointLight, sphereSize ) );
 
-    const pointLight2 = new PointLight(0xffffd9, 50000);
+    const pointLight2 = new PointLight(0xffffd9, 30000);
     pointLight2.position.set(-180, 120, 220); // scene origin is 1.5m off ground
     pointLight2.decay = 2;
+    // pointLight2.castShadow = true;
     scene.add(pointLight2);
     // scene.add( new PointLightHelper( pointLight2, sphereSize ) );
 
-    const pointLight3 = new PointLight(0xffffd9, 20000);
+    const pointLight3 = new PointLight(0xffffd9, 15000);
     pointLight3.position.set(190, 150, -250);
     pointLight3.decay = 2;
+    // pointLight3.castShadow = true;
     scene.add(pointLight3);
     // scene.add( new PointLightHelper( pointLight3, sphereSize ) );
 
-    const pointLight4 = new PointLight(0xffffd9, 20000);
+    const pointLight4 = new PointLight(0xffffd9, 15000);
     pointLight4.position.set(30, 150, -400);
     pointLight4.decay = 2;
+    // pointLight4.castShadow = true;
     scene.add(pointLight4);
     // scene.add( new PointLightHelper( pointLight4, sphereSize ) );
 
-    const pointLight5 = new PointLight(0xffffd9, 20000);
+    const pointLight5 = new PointLight(0xffffd9, 15000);
     pointLight5.position.set(-180, 150, -250);
     pointLight5.decay = 2;
+    // pointLight5.castShadow = true;
     scene.add(pointLight5);
     // scene.add( new PointLightHelper( pointLight5, sphereSize ) );
 }
