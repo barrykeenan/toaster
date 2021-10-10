@@ -7,12 +7,13 @@ import { initStats } from './components/stats.js';
 import { initRenderer } from './components/renderer.js';
 import { initCamera } from './components/camera.js';
 import { SceneManager } from './components/sceneManager.js';
-import { initLights } from './components/lights.js';
+import { LightManager } from './components/lights.js';
 import { ObjectPicker } from './components/objectPicker.js';
 import { Controls } from './components/controls.js';
 import { ColourPicker } from './components/colour-picker.js';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+// import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 
 document.addEventListener('DOMContentLoaded', function () {
     // initComponents
@@ -25,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // TODO: MaterialManager?
     const sceneManager = new SceneManager(loadingManager);
     const scene = sceneManager.scene;
-    const lights = initLights(scene);
     const clock = new Clock();
 
     const orbitControls = new OrbitControls(camera, renderer.domElement);
@@ -41,8 +41,17 @@ document.addEventListener('DOMContentLoaded', function () {
     orbitControls.autoRotate = true;
     orbitControls.enableDamping = true;
 
-    const objectPicker = new ObjectPicker(sceneManager.scene, camera, sceneManager.pickableMeshes);
-    // const controls = new Controls(camera, sceneManager, orbitControls, objectPicker);
+    // const gizmo = new TransformControls( camera, renderer.domElement );
+    // gizmo.addEventListener( 'change', render );
+
+    // gizmo.addEventListener( 'dragging-changed', function ( event ) {
+    //     orbitControls.enabled = ! event.value;
+    // } );
+
+    const lights = new LightManager(scene);
+
+    // const objectPicker = new ObjectPicker(sceneManager.scene, camera, sceneManager.pickableMeshes);
+    // const controls = new Controls(camera, sceneManager, orbitControls);
 
     const colourPicker = new ColourPicker(sceneManager.materials);
 
@@ -63,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // update the stats and the controls
         stats.update();
         orbitControls.update(delta);
+        lights.update();
         // objectPicker.update(controls.showRay);
 
         // bounce the toaster up and down

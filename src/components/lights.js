@@ -1,67 +1,82 @@
-import { HemisphereLight, Color, PointLight, PointLightHelper, CameraHelper } from 'three';
+import { HemisphereLight, Color, PointLight, PointLightHelper, SpotLight, SpotLightHelper, CameraHelper, Group, MathUtils } from 'three';
 
-export function initLights(scene) {
-    // Ambient
-    // TODO: not needed when using envMap
-    const hemiLight = new HemisphereLight(0xb3a79f, 0x635543, 3);
-    hemiLight.position.set(0, 150, 0);
-    // hemiLight.intensity = 0.4;
-    hemiLight.intensity = 0.6;
-    // scene.add(hemiLight);
+class LightManager {
+    constructor(scene, gizmo) {
+        this.scene = scene;
+        this.gizmo = gizmo;
 
-    // Points
-    const sphereSize = 2;
+        this.createLight(scene, 0, MathUtils.degToRad(0), 10000, true);
 
-    const shadowLight = new PointLight(0xffffd9, 20000);
-    shadowLight.name = 'shadow';
-    shadowLight.position.set(0, 150, 0); // scene origin is 1.5m off ground
-    shadowLight.decay = 2;
+        this.createLight(scene, 1.41, 1.35, 20000);
+        this.createLight(scene, 0.6, 1.15, 30000);
+        this.createLight(scene, -0.43, 1.09, 20000);
+        this.createLight(scene, -1.2, 1.3, 40000); // shadow
 
-    shadowLight.castShadow = true;
-    shadowLight.shadow.camera.near = 5; // default
-    shadowLight.shadow.camera.far = 500; // default
-    shadowLight.shadow.radius = 20;
-    shadowLight.shadow.mapSize.width = 1024; // default
-    shadowLight.shadow.mapSize.height = 1024; // default
+        this.createLight(scene, -2.6, 1.1, 30000);
+        this.createLight(scene, -2.99, 0.87, 40000);
+        this.createLight(scene, 2.1, 0.78, 40000);
+    }
 
-    scene.add(shadowLight);
-    // scene.add(new PointLightHelper(shadowLight, sphereSize));
+    createLight(scene, rotate, height, intensity, castShadow, gizmo) {
+        const distance = 500; // far distance of env sphere
+        const pivotRotate = new Group();
+        pivotRotate.rotateY(rotate);
+        scene.add(pivotRotate);
 
-    var shadowHelper = new CameraHelper(shadowLight.shadow.camera);
-    // scene.add(shadowHelper);
+        const pivotHeight = new Group();
+        pivotHeight.rotateX(height);
+        pivotRotate.add(pivotHeight);
 
-    const pointLight = new PointLight(0xffffd9, 30000);
-    pointLight.position.set(180, 100, 200); // scene origin is 1.5m off ground
-    pointLight.decay = 2;
-    // pointLight.castShadow = true;
-    scene.add(pointLight);
-    // scene.add( new PointLightHelper( pointLight, sphereSize ) );
+        const arm = new Group();
+        arm.position.set(0, distance, 0); // scene origin is 1.5m off ground
+        pivotHeight.add(arm);
 
-    const pointLight2 = new PointLight(0xffffd9, 30000);
-    pointLight2.position.set(-180, 120, 220); // scene origin is 1.5m off ground
-    pointLight2.decay = 2;
-    // pointLight2.castShadow = true;
-    scene.add(pointLight2);
-    // scene.add( new PointLightHelper( pointLight2, sphereSize ) );
+        const spotLight = new SpotLight();
+        spotLight.color = new Color("rgb(255, 245, 200)");
+        spotLight.intensity = intensity;
+        spotLight.decay = 2;
+        spotLight.angle = 0.3;
+        // spotLight.distance = 550;
+        
+        if(castShadow){
+            spotLight.castShadow = true;
+            spotLight.shadow.camera.near = 400;
+            spotLight.shadow.camera.far = 600;
+            spotLight.shadow.focus = 1.3;   
+        }
 
-    const pointLight3 = new PointLight(0xffffd9, 15000);
-    pointLight3.position.set(190, 150, -250);
-    pointLight3.decay = 2;
-    // pointLight3.castShadow = true;
-    scene.add(pointLight3);
-    // scene.add( new PointLightHelper( pointLight3, sphereSize ) );
+        arm.add(spotLight);
 
-    const pointLight4 = new PointLight(0xffffd9, 15000);
-    pointLight4.position.set(30, 150, -400);
-    pointLight4.decay = 2;
-    // pointLight4.castShadow = true;
-    scene.add(pointLight4);
-    // scene.add( new PointLightHelper( pointLight4, sphereSize ) );
+        if (gizmo) {
+            pivotRotate.name = 'pivotRotate';
+            pivotHeight.name = 'pivotHeight';
+            arm.name = 'lightArm';
+            spotLight.name = 'spotLight1';
 
-    const pointLight5 = new PointLight(0xffffd9, 15000);
-    pointLight5.position.set(-180, 150, -250);
-    pointLight5.decay = 2;
-    // pointLight5.castShadow = true;
-    scene.add(pointLight5);
-    // scene.add( new PointLightHelper( pointLight5, sphereSize ) );
+            gizmo.attach(pivotHeight);
+            gizmo.setMode('rotate');
+            gizmo.setSpace('local');
+            scene.add(gizmo);
+
+            this.spotLightHelper = new SpotLightHelper(spotLight);
+            scene.add(this.spotLightHelper);
+            
+            this.shadowHelper = new CameraHelper(spotLight.shadow.camera);
+            scene.add(this.shadowHelper);
+        }else {
+            // scene.add(new SpotLightHelper(spotLight));
+            // scene.add(new CameraHelper(spotLight.shadow.camera));
+        }
+    }
+
+    update() {
+        if(this.spotLightHelper){
+            this.spotLightHelper.update();
+        }
+        if(this.shadowHelper){
+            this.shadowHelper.update();
+        }
+    }
 }
+
+export { LightManager };
