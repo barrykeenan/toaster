@@ -34,10 +34,7 @@ class SceneManager {
 
         this.pickableMeshes = [];
 
-        const helper = new GridHelper(50, 10);
-        helper.material.transparent = true;
-        helper.material.opacity = 0.25;
-        // this.scene.add(helper);
+        // this.grid();
 
         const planeGeometry = new PlaneGeometry(500, 500);
         planeGeometry.rotateX(-Math.PI / 2);
@@ -53,8 +50,15 @@ class SceneManager {
         this.environmentMap();
     }
 
+    grid() {
+        const helper = new GridHelper(50, 10);
+        helper.material.transparent = true;
+        helper.material.opacity = 0.25;
+        this.scene.add(helper);
+    }
+
     skybox() {
-        const backgroundTexture = this.textureLoader.load('environments/CT-office.jpg');
+        const backgroundTexture = this.textureLoader.load('environments/CT-office-2k-sharper-90.webp');
         backgroundTexture.mapping = EquirectangularReflectionMapping;
         this.scene.background = backgroundTexture;
     }
@@ -91,12 +95,13 @@ class SceneManager {
         this.materials.toaster = new MeshStandardMaterial({
             normalMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Normal.jpg'),
             metalnessMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Metallic.jpg'),
-            metalness: 1,
+            metalness: 0.9,
+            // metalness: 0.5, // debug shadow
             roughnessMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Roughness.jpg'),
             map: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_BaseColor.jpg'),
             aoMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Occlusion.jpg'),
             aoMapIntensity: 0.75,
-            envMapIntensity: 0.9,
+            // envMapIntensity: 0.5,
         });
         this.materials.toasterBody = this.materials.toaster.clone();
 
