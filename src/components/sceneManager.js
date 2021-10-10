@@ -9,6 +9,7 @@ import {
     PlaneGeometry,
     ShadowMaterial,
     GridHelper,
+    sRGBEncoding
 } from 'three';
 
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
@@ -67,6 +68,7 @@ class SceneManager {
     environmentMap() {
         const environmentMap = this.textureLoader.load('environments/CT-office-2k-sharper-90.webp', (tx) => {
             tx.mapping = EquirectangularReflectionMapping;
+            tx.encoding  = sRGBEncoding;
             // linear? also try 4k demo
             this.scene.environment = tx;
         });
@@ -103,6 +105,7 @@ class SceneManager {
             aoMapIntensity: 0.75,
             // envMapIntensity: 0.5,
         });
+        this.materials.toaster.map.encoding = sRGBEncoding;
         this.materials.toasterBody = this.materials.toaster.clone();
 
         const toaster = new Group();

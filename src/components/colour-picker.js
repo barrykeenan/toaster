@@ -2,8 +2,6 @@ class ColourPicker {
     constructor(materials) {
         this.materials = materials;
 
-        console.log('ColourPicker', this.materials);
-
         this.initComponents();
         this.bindEvents();
     }
@@ -19,6 +17,8 @@ class ColourPicker {
                 const style = getComputedStyle(swatch);
 
                 this.materials.toasterBody.color.setStyle(style.backgroundColor);
+                this.materials.toasterBody.color.convertSRGBToLinear();
+                // color.convertSRGBToLinear();
                 this.materials.toasterBody.metalness = 0.2;
                 this.materials.toasterBody.roughness = 1.1;
             });

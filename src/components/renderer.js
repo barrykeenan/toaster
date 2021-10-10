@@ -1,4 +1,4 @@
-import { WebGLRenderer, PCFSoftShadowMap } from 'three';
+import { WebGLRenderer, PCFSoftShadowMap, ACESFilmicToneMapping,sRGBEncoding } from 'three';
 
 /**
  * Initialize a simple default renderer and binds it to the body dom element.
@@ -6,11 +6,10 @@ import { WebGLRenderer, PCFSoftShadowMap } from 'three';
  * @param additionalProperties Additional properties to pass into the renderer
  */
 export function initRenderer(additionalProperties) {
-    var props = typeof additionalProperties !== 'undefined' && additionalProperties ? additionalProperties : {};
-
-    // var renderer = new WebGLRenderer(props);
-    const renderer = new WebGLRenderer({ alpha: true });
-    // const renderer = new WebGLRenderer({ antialias: true });
+    const renderer = new WebGLRenderer({ 
+        // antialias: true,
+        alpha: true 
+    });
     // renderer.setPixelRatio(window.devicePixelRatio); // perf hit
 
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -19,6 +18,10 @@ export function initRenderer(additionalProperties) {
     renderer.shadowMapSoft = true;
     renderer.shadowMap.type = PCFSoftShadowMap;
     renderer.physicallyCorrectLights = true;
+
+    renderer.toneMapping = ACESFilmicToneMapping;
+    renderer.gammaFactor = 2.2;
+    renderer.outputEncoding = sRGBEncoding;
 
     // TODO if dom element param, otherwise document.body.appendChild(renderer.domElement)
     document.getElementById('webgl-output').appendChild(renderer.domElement);
