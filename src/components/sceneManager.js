@@ -34,10 +34,7 @@ class SceneManager {
 
         this.pickableMeshes = [];
 
-        const helper = new GridHelper(50, 10);
-        helper.material.transparent = true;
-        helper.material.opacity = 0.25;
-        // this.scene.add(helper);
+        // this.grid();
 
         const planeGeometry = new PlaneGeometry(500, 500);
         planeGeometry.rotateX(-Math.PI / 2);
@@ -51,6 +48,13 @@ class SceneManager {
 
         // this.skybox();
         this.environmentMap();
+    }
+
+    grid() {
+        const helper = new GridHelper(50, 10);
+        helper.material.transparent = true;
+        helper.material.opacity = 0.25;
+        this.scene.add(helper);
     }
 
     skybox() {
