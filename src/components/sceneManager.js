@@ -5,7 +5,6 @@ import {
     MeshStandardMaterial,
     TextureLoader,
     EquirectangularReflectionMapping,
-    PMREMGenerator,
     PlaneGeometry,
     ShadowMaterial,
     GridHelper,
@@ -97,7 +96,7 @@ class SceneManager {
         this.materials.toaster = new MeshStandardMaterial({
             normalMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Normal.jpg'),
             metalnessMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Metallic.jpg'),
-            metalness: 0.9,
+            metalness: 1,
             // metalness: 0.5, // debug shadow
             roughnessMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Roughness.jpg'),
             map: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_BaseColor.jpg'),
@@ -106,7 +105,10 @@ class SceneManager {
             // envMapIntensity: 0.5,
         });
         this.materials.toaster.map.encoding = sRGBEncoding;
+
         this.materials.toasterBody = this.materials.toaster.clone();
+        this.materials.toasterBody.metalness = 1;
+        this.materials.toasterBody.roughness = 1.05;
 
         const toaster = new Group();
         toaster.name = 'toaster';

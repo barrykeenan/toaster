@@ -9,7 +9,7 @@ import { initCamera } from './components/camera.js';
 import { SceneManager } from './components/sceneManager.js';
 import { LightManager } from './components/lights.js';
 import { ObjectPicker } from './components/objectPicker.js';
-import { Controls } from './components/controls.js';
+// import { Controls } from './components/controls.js';
 import { ColourPicker } from './components/colour-picker.js';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
     orbitControls.minPolarAngle = MathUtils.degToRad(30);
     orbitControls.maxPolarAngle = MathUtils.degToRad(120);
 
-    orbitControls.autoRotate = true;
+    // orbitControls.autoRotate = true;
     orbitControls.enableDamping = true;
 
     // const gizmo = new TransformControls( camera, renderer.domElement );

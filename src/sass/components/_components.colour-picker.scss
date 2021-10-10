@@ -82,11 +82,12 @@ $border-size: 0px;
         transform: scale(1.1);
     }
 
-    &.orange {
+    &.chrome {
         > [type='radio'],
         > [type='checkbox'] {
             + label {
-                @include color($bg: #e67e22);
+                @include color($bg: $color-chrome);
+                background-image: linear-gradient(315deg, #bdcad9 0%, #e1dada 74%);
             }
         }
     }
@@ -94,23 +95,7 @@ $border-size: 0px;
         > [type='radio'],
         > [type='checkbox'] {
             + label {
-                @include color($bg: #e74c3c);
-            }
-        }
-    }
-    &.yellow {
-        > [type='radio'],
-        > [type='checkbox'] {
-            + label {
-                @include color($bg: #f1c40f);
-            }
-        }
-    }
-    &.purple {
-        > [type='radio'],
-        > [type='checkbox'] {
-            + label {
-                @include color($bg: #9b59b6);
+                @include color($bg: $color-red);
             }
         }
     }
@@ -118,7 +103,7 @@ $border-size: 0px;
         > [type='radio'],
         > [type='checkbox'] {
             + label {
-                @include color($bg: #2ecc71);
+                @include color($bg: $color-green);
             }
         }
     }
@@ -126,8 +111,17 @@ $border-size: 0px;
         > [type='radio'],
         > [type='checkbox'] {
             + label {
-                @include color($bg: #3498db);
+                @include color($bg: $color-blue);
             }
         }
     }
+    &.pink {
+        > [type='radio'],
+        > [type='checkbox'] {
+            + label {
+                @include color($bg: $color-pink);
+            }
+        }
+    }
+
 }
