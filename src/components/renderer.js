@@ -7,8 +7,9 @@ import { WebGLRenderer, PCFSoftShadowMap, ACESFilmicToneMapping,sRGBEncoding } f
  */
 export function initRenderer(additionalProperties) {
     const renderer = new WebGLRenderer({ 
-        // antialias: true,
-        alpha: true 
+        powerPreference: "high-performance", 
+        alpha: true,
+        // antialias: true, // perf hit mobile
     });
     // renderer.setPixelRatio(window.devicePixelRatio); // perf hit
 
