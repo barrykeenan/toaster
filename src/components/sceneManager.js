@@ -5,10 +5,10 @@ import {
     MeshStandardMaterial,
     TextureLoader,
     EquirectangularReflectionMapping,
-    PMREMGenerator,
     PlaneGeometry,
     ShadowMaterial,
     GridHelper,
+    sRGBEncoding
 } from 'three';
 
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
@@ -67,6 +67,7 @@ class SceneManager {
     environmentMap() {
         const environmentMap = this.textureLoader.load('environments/CT-office-2k-sharper-90.webp', (tx) => {
             tx.mapping = EquirectangularReflectionMapping;
+            tx.encoding  = sRGBEncoding;
             // linear? also try 4k demo
             this.scene.environment = tx;
         });
@@ -95,7 +96,7 @@ class SceneManager {
         this.materials.toaster = new MeshStandardMaterial({
             normalMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Normal.jpg'),
             metalnessMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Metallic.jpg'),
-            metalness: 0.9,
+            metalness: 1,
             // metalness: 0.5, // debug shadow
             roughnessMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Roughness.jpg'),
             map: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_BaseColor.jpg'),
@@ -103,7 +104,11 @@ class SceneManager {
             aoMapIntensity: 0.75,
             // envMapIntensity: 0.5,
         });
+        this.materials.toaster.map.encoding = sRGBEncoding;
+
         this.materials.toasterBody = this.materials.toaster.clone();
+        this.materials.toasterBody.metalness = 1;
+        this.materials.toasterBody.roughness = 1.05;
 
         const toaster = new Group();
         toaster.name = 'toaster';

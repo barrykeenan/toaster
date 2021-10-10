@@ -2,8 +2,6 @@ class ColourPicker {
     constructor(materials) {
         this.materials = materials;
 
-        console.log('ColourPicker', this.materials);
-
         this.initComponents();
         this.bindEvents();
     }
@@ -17,10 +15,17 @@ class ColourPicker {
             swatch.addEventListener('click', () => {
                 // TODO: attach events to radio input or the label?
                 const style = getComputedStyle(swatch);
+                console.log(style.backgroundColor);
 
                 this.materials.toasterBody.color.setStyle(style.backgroundColor);
-                this.materials.toasterBody.metalness = 0.2;
-                this.materials.toasterBody.roughness = 1.1;
+                if(style.backgroundColor == 'rgb(189, 202, 217)'){
+                    this.materials.toasterBody.metalness = 1;
+                    this.materials.toasterBody.roughness = 1.05;
+                }
+                else{
+                    this.materials.toasterBody.metalness = 0.1;
+                    this.materials.toasterBody.roughness = 1;
+                }
             });
         });
     }
