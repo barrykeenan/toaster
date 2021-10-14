@@ -13,13 +13,12 @@ class ColourPicker {
 
     bindEvents() {
         this.swatches.forEach((swatch) => {
-            swatch.addEventListener('click', () => {
-                // TODO: attach events to radio input or the label?
-                const style = getComputedStyle(swatch);
-                console.log(style.backgroundColor);
+            swatch.addEventListener('click', (event) => {
+                const swatchHex = swatch.dataset.swatch;
+                
+                this.materials.toasterBody.color.setStyle(swatchHex);
 
-                this.materials.toasterBody.color.setStyle(style.backgroundColor);
-                if(style.backgroundColor == 'rgb(189, 202, 217)'){
+                if(swatchHex == '#d3e4e6'){
                     this.materials.toasterBody.metalness = 1;
                     this.materials.toasterBody.roughness = 1.05;
                 }

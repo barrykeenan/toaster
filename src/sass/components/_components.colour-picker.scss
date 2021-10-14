@@ -119,7 +119,7 @@ $n: 5;
         > [type='checkbox'] {
             + label {
                 @include color($bg: $color-chrome);
-                background-image: linear-gradient(315deg, #bdcad9 0%, #e1dada 74%);
+                background-image: linear-gradient(315deg, #8e9daf 0%, #e1dada 74%);
             }
         }
     }
