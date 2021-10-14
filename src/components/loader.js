@@ -22,12 +22,22 @@ export function initLoadingManager() {
 
         // optional: remove loader from DOM via event listener
         loadingScreen.addEventListener('transitionend', onTransitionEnd);
+
+        // TODO emit an event, or pass in components to be notified here instead
+
+        const el = document.querySelector('[data-color-picker]');
+        const swatches = document.querySelectorAll('[data-swatch]');
+
+        el.classList.remove("hidden");
+
+        swatches.forEach((swatch) => {
+            swatch.classList.add('appear');
+        });
     };
 
     loadingManager.onProgress = function (url, loaded, total) {
         console.log(url, loaded, total);
         console.log('Loaded:', Math.round((loaded / total) * 100, 2) + '%');
-        // bar.animate(1.0);
     };
 
     loadingManager.onError = function (url) {

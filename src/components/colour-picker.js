@@ -7,26 +7,37 @@ class ColourPicker {
     }
 
     initComponents() {
+        this.el = document.querySelector('[data-color-picker]');
         this.swatches = document.querySelectorAll('[data-swatch]');
     }
 
     bindEvents() {
         this.swatches.forEach((swatch) => {
-            swatch.addEventListener('click', () => {
-                // TODO: attach events to radio input or the label?
-                const style = getComputedStyle(swatch);
-                console.log(style.backgroundColor);
+            swatch.addEventListener('click', (event) => {
+                const swatchHex = swatch.dataset.swatch;
+                
+                this.materials.toasterBody.color.setStyle(swatchHex);
 
-                this.materials.toasterBody.color.setStyle(style.backgroundColor);
-                if(style.backgroundColor == 'rgb(189, 202, 217)'){
+                // chrome
+                if(swatchHex == '#d3e4e6'){
                     this.materials.toasterBody.metalness = 1;
                     this.materials.toasterBody.roughness = 1.05;
                 }
+                // painted
                 else{
-                    this.materials.toasterBody.metalness = 0.1;
-                    this.materials.toasterBody.roughness = 1;
+                    this.materials.toasterBody.metalness = 0.05;
+                    this.materials.toasterBody.roughness = 1.2;
                 }
             });
+        });
+    }
+
+    render() {
+        // show this component
+        this.el.classList.remove("hidden");
+
+        this.swatches.forEach((swatch) => {
+            swatch.classList.add('appear');
         });
     }
 }

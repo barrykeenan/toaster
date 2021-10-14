@@ -93,22 +93,23 @@ class SceneManager {
     toaster() {
         // const occlusionRoughnessMetallic = this.textureLoader.load('models/toaster/textures/v2/webp/toaster_low_material_OcclusionRoughnessMetallic.webp');
 
+        // trim initial
         this.materials.toaster = new MeshStandardMaterial({
             normalMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Normal.jpg'),
             metalnessMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Metallic.jpg'),
             metalness: 1,
-            // metalness: 0.5, // debug shadow
             roughnessMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Roughness.jpg'),
-            map: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_BaseColor.jpg'),
             aoMap: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_Occlusion.jpg'),
             aoMapIntensity: 0.75,
+            map: this.textureLoader.load('models/toaster/textures/v2/jpg/toaster_low_material_BaseColor.jpg'),
             // envMapIntensity: 0.5,
         });
         this.materials.toaster.map.encoding = sRGBEncoding;
 
+        // body initial
         this.materials.toasterBody = this.materials.toaster.clone();
-        this.materials.toasterBody.metalness = 1;
         this.materials.toasterBody.roughness = 1.05;
+        this.materials.toasterBody.color.setStyle('#d3e4e6');
 
         const toaster = new Group();
         toaster.name = 'toaster';
