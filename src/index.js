@@ -31,8 +31,8 @@ const orbitControls = new OrbitControls(camera, renderer.domElement);
 orbitControls.target.y = -5; // pan up
 orbitControls.enablePan = false;
 // Dolly limits.
-orbitControls.minDistance = 35;
-orbitControls.maxDistance = 120;
+orbitControls.minDistance = 38;
+orbitControls.maxDistance = 122;
 // Vertical orbit limits.
 orbitControls.minPolarAngle = MathUtils.degToRad(30);
 orbitControls.maxPolarAngle = MathUtils.degToRad(120);
