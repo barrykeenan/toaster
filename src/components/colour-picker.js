@@ -18,13 +18,15 @@ class ColourPicker {
                 
                 this.materials.toasterBody.color.setStyle(swatchHex);
 
+                // chrome
                 if(swatchHex == '#d3e4e6'){
                     this.materials.toasterBody.metalness = 1;
                     this.materials.toasterBody.roughness = 1.05;
                 }
+                // painted
                 else{
-                    this.materials.toasterBody.metalness = 0.1;
-                    this.materials.toasterBody.roughness = 1;
+                    this.materials.toasterBody.metalness = 0.05;
+                    this.materials.toasterBody.roughness = 1.2;
                 }
             });
         });
@@ -35,7 +37,6 @@ class ColourPicker {
         this.el.classList.remove("hidden");
 
         this.swatches.forEach((swatch) => {
-            console.log(swatch);
             swatch.classList.add('appear');
         });
     }

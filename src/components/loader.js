@@ -31,7 +31,6 @@ export function initLoadingManager() {
         el.classList.remove("hidden");
 
         swatches.forEach((swatch) => {
-            console.log(swatch);
             swatch.classList.add('appear');
         });
     };
@@ -39,7 +38,6 @@ export function initLoadingManager() {
     loadingManager.onProgress = function (url, loaded, total) {
         console.log(url, loaded, total);
         console.log('Loaded:', Math.round((loaded / total) * 100, 2) + '%');
-        // bar.animate(1.0);
     };
 
     loadingManager.onError = function (url) {
