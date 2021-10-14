@@ -6,6 +6,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <title>1 2 3 Toast</title>
+
+        <style type="text/css">
+            .hidden {display: none;}
+        </style>
     </head>
 
     <body>
@@ -16,24 +20,24 @@
         <div id="webgl-output"></div>
 
         <div class="footer">
-            <fieldset class="color-picker">
-                <div class="swatch chrome">
+            <fieldset class="color-picker hidden" data-color-picker>
+                <div class="swatch chrome" data-swatch>
                     <input type="radio" name="swatch_demo" id="swatch_4" value="4" data-swatch-radio="#ffffff" />
-                    <label for="swatch_4" data-swatch><span class="sr-only">Button</span></label>
+                    <label for="swatch_4"><span class="sr-only">Button</span></label>
                 </div>
-                <div class="swatch red">
+                <div class="swatch red" data-swatch>
                     <input type="radio" name="swatch_demo" id="swatch_5" value="5" data-swatch-radio="#ea2227" />
-                    <label for="swatch_5" data-swatch><span class="sr-only">Button</span></label>
+                    <label for="swatch_5"><span class="sr-only">Button</span></label>
                 </div>
-                <div class="swatch green">
+                <div class="swatch green" data-swatch>
                     <input type="radio" name="swatch_demo" id="swatch_2" value="2" data-swatch-radio="#8bc541" />
-                    <label for="swatch_2" data-swatch><span class="sr-only">Button</span></label>
+                    <label for="swatch_2"><span class="sr-only">Button</span></label>
                 </div>
-                <div class="swatch blue">
+                <div class="swatch blue" data-swatch>
                     <input type="radio" name="swatch_demo" id="swatch_3" value="3" data-swatch-radio="#25a8e0" />
-                    <label for="swatch_3" data-swatch><span class="sr-only">Button</span></label>
+                    <label for="swatch_3"><span class="sr-only">Button</span></label>
                 </div>
-                <div class="swatch pink">
+                <div class="swatch pink" data-swatch>
                     <input
                         type="radio"
                         name="swatch_demo"
@@ -42,7 +46,7 @@
                         checked
                         data-swatch-radio="#ed498f"
                     />
-                    <label for="swatch_1" data-swatch><span class="sr-only">Button</span></label>
+                    <label for="swatch_1"><span class="sr-only">Button</span></label>
                 </div>
             </fieldset>
         </div>

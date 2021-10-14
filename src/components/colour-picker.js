@@ -7,6 +7,7 @@ class ColourPicker {
     }
 
     initComponents() {
+        this.el = document.querySelector('[data-color-picker]');
         this.swatches = document.querySelectorAll('[data-swatch]');
     }
 
@@ -27,6 +28,16 @@ class ColourPicker {
                     this.materials.toasterBody.roughness = 1;
                 }
             });
+        });
+    }
+
+    render() {
+        // show this component
+        this.el.classList.remove("hidden");
+
+        this.swatches.forEach((swatch) => {
+            console.log(swatch);
+            swatch.classList.add('appear');
         });
     }
 }
