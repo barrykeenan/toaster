@@ -15,6 +15,8 @@ export function initLoadingManager() {
         );
     };
 
+    //TODO: add to callback array?
+
     loadingManager.onLoad = function () {
         console.log('Loading complete!');
         const loadingScreen = document.getElementById('loading-screen');

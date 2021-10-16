@@ -13,6 +13,7 @@ import {
 
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
+// TODO: split to subjects
 class SceneManager {
     constructor(loadingManager) {
         this.scene = new Scene();
@@ -39,7 +40,8 @@ class SceneManager {
         const planeGeometry = new PlaneGeometry(500, 500);
         planeGeometry.rotateX(-Math.PI / 2);
         const shadowCatcher = new Mesh(planeGeometry, this.materials.shadowMaterial);
-        shadowCatcher.position.y = -52;
+        // shadowCatcher.position.y = -52;
+        shadowCatcher.position.y = -38;
         shadowCatcher.receiveShadow = true;
         this.scene.add(shadowCatcher);
 
