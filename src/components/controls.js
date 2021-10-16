@@ -1,4 +1,4 @@
-import { Vector2, Raycaster, CatmullRomCurve3, TubeGeometry, Mesh,Color, MeshBasicMaterial, MathUtils } from 'three';
+import { Vector2, Raycaster, CatmullRomCurve3, TubeGeometry, Mesh, Color, MeshBasicMaterial, MathUtils } from 'three';
 
 import * as dat from 'three/examples/jsm/libs/dat.gui.module';
 
@@ -37,20 +37,20 @@ class Controls {
 
 
         const pivotRotate = this.scene.getObjectByName('pivotRotate');
-        if(pivotRotate){
+        if (pivotRotate) {
             this.gui.add(pivotRotate.rotation, 'y', -MathUtils.degToRad(360), MathUtils.degToRad(360)).name('rotate y').step(0.001);
 
             const pivotHeight = this.scene.getObjectByName('pivotHeight');
             this.gui.add(pivotHeight.rotation, 'x', 0, MathUtils.degToRad(360)).name('height').step(0.001);
-    
+
             const lightArm = this.scene.getObjectByName('lightArm');
             this.gui.add(lightArm.position, 'y', 150, 500).name('arm distance');
-            
+
             const spotLight = this.scene.getObjectByName('spotLight1');
 
             const lightControls = new function () {
                 this.pointColor = spotLight.color.getStyle();
-              };
+            };
 
             this.gui.addColor(lightControls, 'pointColor').onChange(function (e) {
                 spotLight.color = new Color(e);
@@ -63,7 +63,7 @@ class Controls {
             this.gui.add(spotLight.shadow.camera, 'far', 500, 1000).onChange(() => spotLight.shadow.camera.updateProjectionMatrix());;
             this.gui.add(spotLight.shadow, 'focus', 0, 10);
         }
-        
+
 
         // const toaster = this.scene.getObjectByName('toaster');
         // this.gui.add(toaster.position, 'y', -50, 50);
