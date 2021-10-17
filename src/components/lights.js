@@ -1,9 +1,12 @@
-import { HemisphereLight, Color, PointLight, PointLightHelper, SpotLight, SpotLightHelper, CameraHelper, Group, MathUtils } from 'three';
+import { EquirectangularReflectionMapping, sRGBEncoding, Color, SpotLight, SpotLightHelper, CameraHelper, Group, MathUtils } from 'three';
 
-class LightManager {
-    constructor(scene, gizmo) {
+class Lights {
+    constructor(scene, textureLoader, gizmo) {
         this.scene = scene;
+        this.textureLoader = textureLoader;
         this.gizmo = gizmo;
+
+        this.environmentMap();
 
         this.createLight(scene, 0, MathUtils.degToRad(0), 10000, true);
 
@@ -15,6 +18,15 @@ class LightManager {
         this.createLight(scene, -2.6, 1.1, 30000);
         this.createLight(scene, -2.99, 0.87, 40000);
         this.createLight(scene, 2.1, 0.78, 40000);
+    }
+
+    environmentMap() {
+        this.textureLoader.load('environments/CT-office-2k-sharper-90.webp', (tx) => {
+            tx.mapping = EquirectangularReflectionMapping;
+            tx.encoding = sRGBEncoding;
+            // linear? also try 4k demo
+            this.scene.environment = tx;
+        });
     }
 
     createLight(scene, rotate, height, intensity, castShadow, gizmo) {
@@ -37,12 +49,12 @@ class LightManager {
         spotLight.decay = 2;
         spotLight.angle = 0.3;
         // spotLight.distance = 550;
-        
-        if(castShadow){
+
+        if (castShadow) {
             spotLight.castShadow = true;
             spotLight.shadow.camera.near = 400;
             spotLight.shadow.camera.far = 600;
-            spotLight.shadow.focus = 1.3;   
+            spotLight.shadow.focus = 1.3;
         }
 
         arm.add(spotLight);
@@ -60,23 +72,23 @@ class LightManager {
 
             this.spotLightHelper = new SpotLightHelper(spotLight);
             scene.add(this.spotLightHelper);
-            
+
             this.shadowHelper = new CameraHelper(spotLight.shadow.camera);
             scene.add(this.shadowHelper);
-        }else {
+        } else {
             // scene.add(new SpotLightHelper(spotLight));
             // scene.add(new CameraHelper(spotLight.shadow.camera));
         }
     }
 
     update() {
-        if(this.spotLightHelper){
+        if (this.spotLightHelper) {
             this.spotLightHelper.update();
         }
-        if(this.shadowHelper){
+        if (this.shadowHelper) {
             this.shadowHelper.update();
         }
     }
 }
 
-export { LightManager };
+export { Lights };

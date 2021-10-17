@@ -1,4 +1,4 @@
-import { WebGLRenderer, PCFSoftShadowMap, ACESFilmicToneMapping,sRGBEncoding } from 'three';
+import { WebGLRenderer, PCFSoftShadowMap, ACESFilmicToneMapping, sRGBEncoding } from 'three';
 
 /**
  * Initialize a simple default renderer and binds it to the body dom element.
@@ -6,8 +6,8 @@ import { WebGLRenderer, PCFSoftShadowMap, ACESFilmicToneMapping,sRGBEncoding } f
  * @param additionalProperties Additional properties to pass into the renderer
  */
 export function initRenderer(additionalProperties) {
-    const renderer = new WebGLRenderer({ 
-        powerPreference: "high-performance", 
+    const renderer = new WebGLRenderer({
+        powerPreference: "high-performance",
         alpha: true,
         // antialias: true, // perf hit mobile
     });

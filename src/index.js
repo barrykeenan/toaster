@@ -1,44 +1,23 @@
 import './sass/styles.scss';
 
-import { Clock, Vector3, MathUtils } from 'three';
+import { Vector3 } from 'three';
 
-import { initLoadingManager } from './components/loader.js';
 import { initStats } from './components/stats.js';
 import { initRenderer } from './components/renderer.js';
 import { initCamera } from './components/camera.js';
-import { SceneManager } from './components/sceneManager.js';
-import { LightManager } from './components/lights.js';
-import { ObjectPicker } from './components/objectPicker.js';
+import { SceneManager } from './sceneManager.js';
+// import { ObjectPicker } from './components/objectPicker.js';
 // import { Controls } from './components/controls.js';
-import { ColourPicker } from './components/colour-picker.js';
-
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 
 // initComponents
-const loadingManager = initLoadingManager();
 const stats = initStats();
 const renderer = initRenderer();
-// TODO: fit camera to screen aspect
+// TODO: fit camera method here?
 const camera = initCamera(new Vector3(-20, 22, 62));
 
-// TODO: MaterialManager?
-const sceneManager = new SceneManager(loadingManager);
-const scene = sceneManager.scene;
-const clock = new Clock();
-
-const orbitControls = new OrbitControls(camera, renderer.domElement);
-orbitControls.target.y = -5; // pan up
-orbitControls.enablePan = false;
-// Dolly limits.
-orbitControls.minDistance = 38;
-orbitControls.maxDistance = 122;
-// Vertical orbit limits.
-orbitControls.minPolarAngle = MathUtils.degToRad(30);
-orbitControls.maxPolarAngle = MathUtils.degToRad(120);
-
-orbitControls.autoRotate = true;
-orbitControls.enableDamping = true;
+const sceneManager = new SceneManager(renderer, camera);
+// const scene = sceneManager.scene;
 
 // const gizmo = new TransformControls( camera, renderer.domElement );
 // gizmo.addEventListener( 'change', render );
@@ -47,14 +26,9 @@ orbitControls.enableDamping = true;
 //     orbitControls.enabled = ! event.value;
 // } );
 
-const lights = new LightManager(scene);
-
 // const objectPicker = new ObjectPicker(sceneManager.scene, camera, sceneManager.pickableMeshes);
 // const controls = new Controls(camera, sceneManager, orbitControls);
 
-const colourPicker = new ColourPicker(sceneManager.materials);
-
-let step = 0;
 
 bindEvents();
 
@@ -66,22 +40,10 @@ function bindEvents() {
 }
 
 function renderFrame() {
-    const delta = clock.getDelta();
-
-    // update the stats and the controls
     stats.update();
-    orbitControls.update(delta);
-    lights.update();
-    // objectPicker.update(controls.showRay);
+    sceneManager.update();
 
-    // bounce the toaster up and down
-    // step += controls.bouncingSpeed;
-    step += 0.05;
-    const toaster = sceneManager.scene.getObjectByName('toaster');
-    if (toaster) {
-        // toaster.position.y = controls.heightScale * Math.sin(step);
-        toaster.position.y = 0.15 * Math.sin(step);
-    }
+    // objectPicker.update(controls.showRay);
 
     // render frame
     renderer.render(sceneManager.scene, camera);

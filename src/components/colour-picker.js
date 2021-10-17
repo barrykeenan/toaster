@@ -15,16 +15,16 @@ class ColourPicker {
         this.swatches.forEach((swatch) => {
             swatch.addEventListener('click', (event) => {
                 const swatchHex = swatch.dataset.swatch;
-                
+
                 this.materials.toasterBody.color.setStyle(swatchHex);
 
                 // chrome
-                if(swatchHex == '#d3e4e6'){
+                if (swatchHex == '#d3e4e6') {
                     this.materials.toasterBody.metalness = 1;
                     this.materials.toasterBody.roughness = 1.05;
                 }
                 // painted
-                else{
+                else {
                     this.materials.toasterBody.metalness = 0.05;
                     this.materials.toasterBody.roughness = 1.2;
                 }
@@ -32,8 +32,7 @@ class ColourPicker {
         });
     }
 
-    render() {
-        // show this component
+    show() {
         this.el.classList.remove("hidden");
 
         this.swatches.forEach((swatch) => {
